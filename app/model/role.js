@@ -29,12 +29,12 @@ const Role = sequelize.define('role', {
     defaultValue: null,
     comment: '角色描述'
   },
-  menus: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    defaultValue: null,
-    comment: '角色菜单权限'
-  }
+  // menuIds: {
+  //   type: DataTypes.STRING,
+  //   allowNull: true,
+  //   defaultValue: null,
+  //   comment: '角色菜单权限'
+  // }
 });
 
 module.exports = Role;

@@ -39,12 +39,12 @@ const User = sequelize.define('user', {
     defaultValue: null,
     comment: '用户头像'
   },
-  roles: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    defaultValue: null,
-    comment: '用户角色'
-  }
+  // roleIds: {
+  //   type: DataTypes.STRING,
+  //   allowNull: true,
+  //   defaultValue: null,
+  //   comment: '用户角色'
+  // }
 });
 
 module.exports = User;
