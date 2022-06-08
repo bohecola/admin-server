@@ -30,19 +30,16 @@ const Menu = sequelize.define('menu', {
   viewPath: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: null,
     comment: '菜单视图文件路径'
   },
   perm: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: null,
     comment: '操作权限'
   },
   icon: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: null,
     comment: '菜单图标'
   },
   keepAlive: {

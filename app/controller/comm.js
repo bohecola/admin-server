@@ -15,7 +15,7 @@ exports.login = async (ctx) => {
   const user = await User.findOne({ where: { username: username } });
 
   // 用户不存在或密码不正确
-  const flag = !user || passwordEncryption(password) !== user.password;
+  const flag = !user || passwordEncryption(username + password) !== user.password;
 
   if (flag) {
     return ctx.fail('账户或密码不正确');

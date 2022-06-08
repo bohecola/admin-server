@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
-
 const sequelize = require('../database');
+const { passwordEncryption } = require('../utils/crypto');
 
 const User = sequelize.define('user', {
   id: {
@@ -21,30 +21,25 @@ const User = sequelize.define('user', {
   password: {
     type: DataTypes.STRING,
     allowNull: false,
+    set(value) {
+      this.setDataValue('password', passwordEncryption(this.username + value));
+    },
     comment: '用户密码'
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: true,
-    defaultValue: null,
     comment: '用户姓名'
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: true,
-    defaultValue: null,
     comment: '用户邮箱'
   },
   desc: {
     type: DataTypes.STRING,
-    allowNull: true,
-    defaultValue: null,
     comment: '用户描述'
   },
   avatar: {
     type: DataTypes.STRING,
-    allowNull: true,
-    defaultValue: null,
     comment: '用户头像'
   }
 });

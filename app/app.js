@@ -8,7 +8,6 @@ const router = require('./router');
 const sequelize = require('./database');
 const auth = require('./middleware/auth');
 const responseBody = require('./middleware/response');
-const { passwordEncryption } = require('./utils/crypto');
 
 const { User, Role, Menu } = require('./model');
 
@@ -20,6 +19,17 @@ const app = new Koa();
 
 app
   .use(responseBody())
+  // 外层异常捕获中间件
+  .use(async (ctx, next) => {
+    try {
+      await next();
+    } catch (err) {
+      ctx.status = 500;
+      ctx.fail(err);
+    }
+  });
+
+app
   .use(auth())
   .use(bodyParser())
   .use(parameter(app))
@@ -32,7 +42,7 @@ app
     await sequelize.sync({ alter: true });
     await sequelize.authenticate();
     const initialUser = await User.findAll();
-    !initialUser.length && await User.create({ username: 'bohecola', password: passwordEncryption('123456'), email: 'bohecola@outlook.com' });
+    !initialUser.length && await User.create({ username: 'bohecola', password: '123456', email: 'bohecola@outlook.com' });
 
     const currentMenus = await Menu.findAll();
     !currentMenus.length && await Menu.bulkCreate([
