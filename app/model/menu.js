@@ -9,33 +9,23 @@ const Menu = sequelize.define('menu', {
     primaryKey: true,
     comment: '菜单id'
   },
+  // 无默认值，须传
   name: {
     type: DataTypes.STRING,
     unique: true,
     allowNull: false,
     comment: '菜单名称'
   },
-  path: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    comment: '节点路由'
-  },
+  // 无默认值，须传
   type: {
     type: DataTypes.INTEGER,
     allowNull: false,
     comment: '菜单类型'
   },
-  icon: {
+  path: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: null,
-    comment: '菜单图标'
-  },
-  parentId: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    defaultValue: null,
-    comment: '上级菜单id'
+    comment: '节点路由'
   },
   viewPath: {
     type: DataTypes.STRING,
@@ -43,20 +33,32 @@ const Menu = sequelize.define('menu', {
     defaultValue: null,
     comment: '菜单视图文件路径'
   },
-  hidden: {
+  perm: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: null,
+    comment: '操作权限'
+  },
+  icon: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: null,
+    comment: '菜单图标'
+  },
+  keepAlive: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: false,
+    defaultValue: 0,
+    comment: '路由缓存'
+  },
+  isShow: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: 1,
     comment: '菜单是否显示'
   },
-  status: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0,
-    comment: '菜单是否启用'
-  },
   sort: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: 0,
     comment: '菜单排序'

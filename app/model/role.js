@@ -10,6 +10,7 @@ const Role = sequelize.define('role', {
     primaryKey: true,
     comment: '角色id'
   },
+  // 无默认值，须传
   name: {
     type: DataTypes.STRING,
     unique: true,
@@ -28,13 +29,7 @@ const Role = sequelize.define('role', {
     allowNull: true,
     defaultValue: null,
     comment: '角色描述'
-  },
-  // menuIds: {
-  //   type: DataTypes.STRING,
-  //   allowNull: true,
-  //   defaultValue: null,
-  //   comment: '角色菜单权限'
-  // }
+  }
 });
 
 module.exports = Role;

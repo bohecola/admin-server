@@ -10,12 +10,14 @@ const User = sequelize.define('user', {
     primaryKey: true,
     comment: '用户id'
   },
+  // 无默认值，须传
   username: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
     comment: '用户名'
   },
+  // 无默认值，须传
   password: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -26,6 +28,12 @@ const User = sequelize.define('user', {
     allowNull: true,
     defaultValue: null,
     comment: '用户姓名'
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: null,
+    comment: '用户邮箱'
   },
   desc: {
     type: DataTypes.STRING,
@@ -38,13 +46,7 @@ const User = sequelize.define('user', {
     allowNull: true,
     defaultValue: null,
     comment: '用户头像'
-  },
-  // roleIds: {
-  //   type: DataTypes.STRING,
-  //   allowNull: true,
-  //   defaultValue: null,
-  //   comment: '用户角色'
-  // }
+  }
 });
 
 module.exports = User;
