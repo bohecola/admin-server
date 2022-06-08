@@ -25,14 +25,14 @@ exports.login = async (ctx) => {
   }
 
   const token = jwt.sign(
-    { userId: user.id, type: 'token' },
+    { userId: user.id },
     tokenSecret,
     { expiresIn: '2h' }
   );
 
   const refreshToken = jwt.sign(
-    { userId: user.id, type: 'refreshToken' },
-    tokenSecret,
+    { userId: user.id },
+    refreshTokenSecret,
     { expiresIn: '36h' }
   );
 
