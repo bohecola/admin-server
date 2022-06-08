@@ -1,6 +1,5 @@
-exports.add = async (ctx, next) => {
+exports.add = async (ctx) => {
   ctx.body = 'add user';
-  next();
 }
 
 exports.delete = async (ctx, next) => {

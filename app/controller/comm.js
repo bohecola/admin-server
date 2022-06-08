@@ -18,10 +18,7 @@ exports.login = async (ctx) => {
   const flag = !user || passwordEncryption(password) !== user.password;
 
   if (flag) {
-    return ctx.body = {
-      code: 1001,
-      message: '账户或密码不正确'
-    };
+    return ctx.fail('账户或密码不正确');
   }
 
   const token = jwt.sign(
@@ -38,14 +35,12 @@ exports.login = async (ctx) => {
 
   const hour = 60 * 60;
 
-  ctx.body = {
-    code: 1000,
-    message: 'success',
-    data: {
-      expire: 2 * hour,
-      token: token,
-      refreshExpire: 36 * hour,
-      refreshToken: refreshToken
-    }
+  const res = {
+    expire: 2 * hour,
+    token: token,
+    refreshExpire: 36 * hour,
+    refreshToken: refreshToken
   };
+
+  ctx.success(res);
 }

@@ -6,6 +6,8 @@ const parameter = require('koa-parameter');
 const path = require('path');
 const router = require('./router');
 const sequelize = require('./database');
+const auth = require('./middleware/auth');
+const responseBody = require('./middleware/response');
 const { passwordEncryption } = require('./utils/crypto');
 
 const { User, Role, Menu } = require('./model');
@@ -17,6 +19,8 @@ Menu.hasMany(Menu, { foreignKey: 'parentId' });
 const app = new Koa();
 
 app
+  .use(responseBody())
+  .use(auth())
   .use(bodyParser())
   .use(parameter(app))
   .use(mount('/public', static(path.join(__dirname, './public'))))
