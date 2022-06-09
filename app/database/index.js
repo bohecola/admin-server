@@ -1,14 +1,18 @@
 const { Sequelize } = require('sequelize');
 const db = require('../conf/db');
 
-const sequelize = new Sequelize({
+const sequelize = new Sequelize(db.database, db.username, db.password, {
   dialect: 'mysql',
-  database: db.database,
-  username: db.username,
-  password: db.password,
   host: db.host,
   port: db.port,
-  timezone: db.timezone
+  timezone: db.timezone,
+  define: {
+    paranoid: true
+  },
+  dialectOptions: {
+    dateStrings: true,
+    typeCast: true
+  }
 });
 
 module.exports = sequelize;

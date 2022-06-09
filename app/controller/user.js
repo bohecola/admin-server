@@ -1,21 +1,23 @@
 const { User } = require("../model");
+const { Op } = require('sequelize');
 
 exports.add = async (ctx) => {
 
   ctx.verifyParams({
     username: 'string',
     password: 'password',
-    email: { type: 'email', required: false }
+    email: { type: 'email', required: false },
+    name: { type: 'string', required: false },
+    desc: { type: 'string', required: false },
+    avatar: { type: 'string', required: false },
   });
 
-  const res = await User.create(ctx.request.body);
+  const { id } = await User.create(ctx.request.body);
 
-  ctx.success(res);
+  ctx.success(id);
 }
 
 exports.delete = async (ctx) => {
-
-  ctx.verifyParams({ id: 'int' });
 
   const { id } = ctx.request.body;
 
@@ -35,6 +37,15 @@ exports.update = async (ctx) => {
   const res = await User.findByPk(id);
 
   if (!res) ctx.throw(404, 'The resource for the operation does not exist');
+
+  ctx.verifyParams({
+    username: 'string',
+    password: 'password',
+    email: { type: 'email', required: false },
+    name: { type: 'string', required: false },
+    desc: { type: 'string', required: false },
+    avatar: { type: 'string', required: false },
+  });
 
   await User.update(ctx.request.body, { where: { id: id } });
 
@@ -62,9 +73,19 @@ exports.list = async (ctx) => {
 }
 
 exports.page = async (ctx) => {
-  const { currentPage = 1, pageSize = 10 } = ctx.request.body;
+  const { currentPage = 1, pageSize = 10, keywords = '' } = ctx.query;
 
-  const res = await User.findAll({ offset: (currentPage - 1) * pageSize, limit: pageSize });
+  const { count, rows } = await User.findAndCountAll({
+    where: {
+      [Op.or]: [
+        {username: {[Op.like]: `%${keywords}%`}},
+        {name: {[Op.like]: `%${keywords}%`}}
+      ]
+    },
+    attributes: { exclude: 'password' },
+    offset: (currentPage - 1) * pageSize,
+    limit: ~~pageSize,
+  });
 
-  ctx.success(res);
+  ctx.success({ total: count, data: rows });
 }
