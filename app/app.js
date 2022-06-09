@@ -8,6 +8,7 @@ const router = require('./router');
 const sequelize = require('./database');
 const auth = require('./middleware/auth');
 const responseBody = require('./middleware/response');
+const pagination = require('./middleware/pagination');
 
 const { User, Role, Menu } = require('./model');
 
@@ -20,6 +21,8 @@ const app = new Koa();
 app
   // 统一格式返回数据
   .use(responseBody())
+  // 分页
+  .use(pagination())
   // 外层异常捕获中间件
   .use(async (ctx, next) => {
     try {

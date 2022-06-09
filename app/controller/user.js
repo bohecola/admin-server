@@ -76,19 +76,15 @@ exports.list = async (ctx) => {
 }
 
 exports.page = async (ctx) => {
-  const { currentPage = 1, pageSize = 10, keywords = '' } = ctx.query;
+  const { currentPage, pageSize, keywords } = ctx.query;
 
-  const { count, rows } = await User.findAndCountAll({
-    where: {
-      [Op.or]: [
-        {username: {[Op.like]: `%${keywords}%`}},
-        {name: {[Op.like]: `%${keywords}%`}}
-      ]
-    },
-    attributes: { exclude: 'password' },
-    offset: (currentPage - 1) * pageSize,
-    limit: ~~pageSize,
+  const res = await ctx.paginate(User, {
+    currentPage: currentPage,
+    pageSize: pageSize,
+    keywords: keywords,
+    likeField: ['username', 'name'],
+    exclude: ['password']
   });
 
-  ctx.success({ total: count, data: rows });
+  ctx.success(res);
 }
