@@ -40,14 +40,20 @@ exports.update = async (ctx) => {
 
   ctx.verifyParams({
     username: 'string',
-    password: 'password',
+    password: { type: 'password', required: false },
     email: { type: 'email', required: false },
     name: { type: 'string', required: false },
     desc: { type: 'string', required: false },
     avatar: { type: 'string', required: false },
   });
 
-  await User.update(ctx.request.body, { where: { id: id } });
+  const { password } = ctx.request.body;
+
+  password && res.passwordV++;
+  
+  Object.assign(res, ctx.request.body);
+
+  await res.save();
 
   ctx.success();
 }
@@ -60,14 +66,11 @@ exports.info = async (ctx) => {
 
   if (!res) ctx.throw(404, 'The resource for the operation does not exist');
 
-  ctx.success({
-    ...res.toJSON(),
-    passwordV: 1
-  });
+  ctx.success(res);
 }
 
 exports.list = async (ctx) => {
-  const res = await User.findAll();
+  const res = await User.findAll({ attributes: { exclude: 'password' } });
 
   ctx.success(res);
 }

@@ -26,6 +26,12 @@ const User = sequelize.define('user', {
     },
     comment: '用户密码'
   },
+  passwordV: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
+    comment: '密码版本'
+  },
   name: {
     type: DataTypes.STRING,
     comment: '用户姓名'
