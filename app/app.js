@@ -18,14 +18,15 @@ Menu.hasMany(Menu, { foreignKey: 'parentId' });
 const app = new Koa();
 
 app
+  // 统一格式返回数据
   .use(responseBody())
   // 外层异常捕获中间件
   .use(async (ctx, next) => {
     try {
       await next();
     } catch (err) {
-      ctx.status = 500;
-      ctx.fail(err);
+      ctx.status = err.statusCode || 500;
+      ctx.error(err);
     }
   });
 
@@ -39,7 +40,7 @@ app
 
 (async () => {
   try {
-    await sequelize.sync({ alter: true });
+    await sequelize.sync();
     await sequelize.authenticate();
     const initialUser = await User.findAll();
     !initialUser.length && await User.create({ username: 'bohecola', password: '123456', email: 'bohecola@outlook.com' });

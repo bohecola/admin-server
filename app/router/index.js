@@ -7,6 +7,7 @@ const user = require('./user');
 const role = require('./role');
 
 router
+  .prefix('/api')
   .use(comm.routes())
   .use(menu.routes())
   .use(user.routes())

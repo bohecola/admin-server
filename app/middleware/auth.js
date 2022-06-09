@@ -1,14 +1,15 @@
 const jwt = require('jsonwebtoken');
-const { tokenSecret, refreshTokenSecret } = require('../conf/secret');
+const { tokenSecret } = require('../conf/secret');
 const { User } = require('../model');
 
 const auth = () => {
   return async (ctx, next) => {
 
-    if (ctx.url === '/login') {
-      await next();
-      return;
-    }
+    const whiteList = ['/login', '/posts'].map(path => `/api${path}`);
+
+    const flag = whiteList.indexOf(ctx.path) !== -1;
+
+    if (flag) return await next();
 
     const token = ctx.get('Authorization');
 
@@ -17,13 +18,17 @@ const auth = () => {
       return ctx.fail('您可能没有权限访问该资源');
     }
 
-    const res = jwt.verify(token, tokenSecret);
+    try {
+      const res = jwt.verify(token, tokenSecret);
 
-    const user = await User.findByPk(res.userId);
-    
-    ctx.user = user;
+      const user = await User.findByPk(res.userId);
 
-    await next();
+      ctx.user = user;
+
+      await next();
+    } catch(err) {
+      ctx.throw(401, err);
+    }
   }
 }
 

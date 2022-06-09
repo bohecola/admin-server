@@ -4,8 +4,8 @@ const responseBody = (options = {}) => {
       ctx.type = type || options.type || 'json';
       ctx.body = {
         code: options.successCode || 1000,
-        message: options.successMessage || 'success',
-        data
+        data,
+        message: options.successMessage || 'success'
       };
     }
 
@@ -14,6 +14,14 @@ const responseBody = (options = {}) => {
       ctx.body = {
         code: code || options.failCode || 1001,
         message: message || options.failMessage || 'fail'
+      };
+    }
+
+    ctx.error = (error, code) => {
+      ctx.type = options.type || 'json';
+      ctx.body = {
+        code: code || options.errorCode || 1001,
+        error: error || '服务器异常'
       };
     }
     await next();

@@ -1,25 +1,23 @@
-exports.add = async (ctx, next) => {
+exports.add = async (ctx) => {
   ctx.body = 'add user';
-  next();
 }
 
-exports.delete = async (ctx, next) => {
+exports.delete = async (ctx) => {
   ctx.body = 'delete user';
-  next();
 }
 
-exports.update = async (ctx, next) => {
+exports.update = async (ctx) => {
   
 }
 
-exports.info = async (ctx, next) => {
+exports.info = async (ctx) => {
   
 }
 
-exports.list = async (ctx, next) => {
+exports.list = async (ctx) => {
   
 }
 
-exports.page = async (ctx, next) => {
+exports.page = async (ctx) => {
   
 }

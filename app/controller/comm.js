@@ -1,6 +1,6 @@
 const { User } = require('../model');
 const jwt = require('jsonwebtoken');
-const { tokenSecret, refreshTokenSecret } = require('../conf/secret');
+const { tokenSecret } = require('../conf/secret');
 const { passwordEncryption } = require('../utils/crypto');
 
 exports.login = async (ctx) => {
@@ -29,7 +29,7 @@ exports.login = async (ctx) => {
 
   const refreshToken = jwt.sign(
     { userId: user.id },
-    refreshTokenSecret,
+    tokenSecret,
     { expiresIn: '36h' }
   );
 
