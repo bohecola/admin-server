@@ -1,16 +1,10 @@
 const { User } = require("../model");
 const { Op } = require('sequelize');
+const { userValidator } = require('../validator');
 
 exports.add = async (ctx) => {
 
-  ctx.verifyParams({
-    username: 'string',
-    password: 'password',
-    email: { type: 'email', required: false },
-    name: { type: 'string', required: false },
-    desc: { type: 'string', required: false },
-    avatar: { type: 'string', required: false },
-  });
+  ctx.verifyParams(userValidator);
 
   const { id } = await User.create(ctx.request.body);
 
@@ -38,14 +32,7 @@ exports.update = async (ctx) => {
 
   if (!res) ctx.throw(404, 'The resource for the operation does not exist');
 
-  ctx.verifyParams({
-    username: 'string',
-    password: { type: 'password', required: false },
-    email: { type: 'email', required: false },
-    name: { type: 'string', required: false },
-    desc: { type: 'string', required: false },
-    avatar: { type: 'string', required: false },
-  });
+  ctx.verifyParams(userValidator);
 
   const { password } = ctx.request.body;
 
