@@ -15,7 +15,9 @@ const pagination = (defaultOptions) => {
         keywords = '',
         likeField = [],
         exclude = [],
-        filter = {}
+        filter = {},
+        association = '',
+        associationAttr = ['id']
       } = options;
 
       const query = {
@@ -41,6 +43,18 @@ const pagination = (defaultOptions) => {
         Object.assign(query, obj);
       }
 
+      if (association) {
+        const obj = {
+          include: {
+            association: association,
+            attributes: associationAttr,
+            through: { attributes: [] }
+          }
+        };
+
+        Object.assign(query, obj);
+      }
+
       const { count, rows } = await Model.findAndCountAll(query);
 
       const data = {
@@ -50,7 +64,7 @@ const pagination = (defaultOptions) => {
           size: pageSize,
           total: count
         }
-      }
+      };
 
       return data;
     }

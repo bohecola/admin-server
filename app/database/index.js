@@ -6,9 +6,9 @@ const sequelize = new Sequelize(db.database, db.username, db.password, {
   host: db.host,
   port: db.port,
   timezone: db.timezone,
-  define: {
-    paranoid: true
-  },
+  // define: {
+  //   paranoid: true
+  // },
   dialectOptions: {
     dateStrings: true,
     typeCast: true

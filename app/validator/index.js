@@ -5,4 +5,11 @@ exports.userValidator = {
   name: { type: 'string', required: false },
   desc: { type: 'string', required: false },
   avatar: { type: 'string', required: false },
+  roleIdList: 'array'
+};
+
+exports.roleValidator = {
+  name: 'string',
+  label: { type: 'string', required: false },
+  remark: { type: 'string', required: false }
 };
