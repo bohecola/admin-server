@@ -22,17 +22,50 @@ exports.delete = async (ctx) => {
 
   const { id } = ctx.request.body;
 
-  const res = await Menu.findByPk(id);
+  const menu = await Menu.findByPk(id);
 
-  if (!res) ctx.throw(404, '菜单不存在');
+  !menu && ctx.throw(404, '菜单不存在');
+
+  const removeIdList = await getChildren(id);
+
+  // console.log(removeIdList, 222222222);
 
   // 移除其关联的子菜单
-  await Menu.destroy({ where: { parentId: id } });
+  // await Menu.destroy({ where: { parentId: id } });
 
-  await Menu.destroy({ where: { id: id } });
+  // await Menu.destroy({ where: { id: id } });
 
   ctx.success();
 }
+
+async function getChildrenIds (id) {
+  const children = await Menu.findAll({ where: { parentId: id } });
+
+  const ids = children.map(child => child.id);
+
+  return ids;
+}
+
+
+async function getChildren(id, menuIdsList = []) {
+
+  const children = await Menu.findAll({ where: { parentId: id } });
+
+  const childrenIds = children.map(child => child.id);
+
+  menuIdsList.push(...childrenIds);
+
+  const currentLevelCollection = await Promise.all(childrenIds.map(id => getChildrenIds(id)));
+
+  if (currentLevelCollection.every(ids => ids.length === 0)) {
+    return menuIdsList;
+  }
+
+  
+
+  return currentLevelCollection;
+}
+
 
 exports.update = async (ctx) => {
 

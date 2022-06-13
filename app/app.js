@@ -28,6 +28,7 @@ app
     try {
       await next();
     } catch (err) {
+      console.log(err)
       ctx.status = err.statusCode || 500;
       ctx.error(err);
     }
