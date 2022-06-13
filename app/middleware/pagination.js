@@ -17,12 +17,14 @@ const pagination = (defaultOptions) => {
         exclude = [],
         filter = {},
         association = '',
-        associationAttr = ['id']
+        associationAttr = ['id'],
+        order = [['createdAt', 'DESC']]
       } = options;
 
       const query = {
         offset: (currentPage - 1) * pageSize,
         limit: ~~pageSize,
+        order: order
       };
 
       if (exclude.length) {

@@ -9,7 +9,6 @@ router
   .post('/delete', menuController.delete)
   .post('/update', menuController.update)
   .get('/info', menuController.info)
-  .get('/list', menuController.list)
-  .get('/page', menuController.page);
+  .get('/list', menuController.list);
 
 module.exports = router;

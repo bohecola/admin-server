@@ -1,15 +1,16 @@
 const { Role } = require("../model");
 const { roleValidator } = require('../validator');
+const { Op } = require('sequelize');
 
 exports.add = async (ctx) => {
 
-  const { menuIdList } = ctx.request.body;
-
   ctx.verifyParams(roleValidator);
+
+  const { menuIdList } = ctx.request.body;
 
   const role = await Role.create(ctx.request.body);
 
-  menuIdList && await role.addRoles(menuIdList);
+  await role.addMenus(menuIdList);
 
   ctx.success(role.id);
 }
@@ -18,28 +19,26 @@ exports.delete = async (ctx) => {
 
   const { id } = ctx.request.body;
 
-  const res = await Role.findByPk(id);
+  const res = await Role.destroy({ where: { id: id } });
 
-  if (!res) ctx.throw(404, 'The resource for the operation does not exist');
-
-  await Role.destroy({ where: { id: id } });
+  !res && ctx.throw(404, '角色不存在');
 
   ctx.success();
 }
 
 exports.update = async (ctx) => {
 
-  const { id } = await ctx.request.body;
-
-  const res = await Role.findByPk(id);
-
-  if (!res) ctx.throw(404, 'The resource for the operation does not exist');
-
   ctx.verifyParams(roleValidator);
-  
-  Object.assign(res, ctx.request.body);
 
-  await res.save();
+  const { id, menuIdList } = await ctx.request.body;
+
+  const role = await Role.findByPk(id);
+
+  !role && ctx.throw(404, '角色不存在');
+
+  await Role.update(ctx.request.body, { where: { id: id } });
+
+  await role.setMenus(menuIdList);
 
   ctx.success();
 }
@@ -48,17 +47,38 @@ exports.info = async (ctx) => {
 
   const { id } = ctx.query;
 
-  const res = await Role.findByPk(id);
+  const role = await Role.findByPk(id, {
+    include: {
+      association: 'menus',
+      attributes: ['id'],
+      through: { attributes: [] }
+    }
+  });
 
-  if (!res) ctx.throw(404, 'The resource for the operation does not exist');
+  !role && ctx.throw(404, '角色不存在');
 
-  ctx.success(res);
+  role.setDataValue('menuIdList', role.menus.map(menu => menu.id));
+
+  delete role.dataValues.menus;
+
+  ctx.success(role);
 }
 
 exports.list = async (ctx) => {
-  const res = await Role.findAll();
 
-  ctx.success(res);
+  const { keywords = '' } = ctx.query;
+
+  const roles = await Role.findAll({
+    where: {
+      [Op.or]: [
+        { name: { [Op.like]: `%${keywords}%` } },
+        { label: { [Op.like]: `%${keywords}%` } }
+      ]
+    },
+    order: [['createdAt', 'DESC']]
+  });
+
+  ctx.success(roles);
 }
 
 exports.page = async (ctx) => {

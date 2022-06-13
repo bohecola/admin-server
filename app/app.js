@@ -19,25 +19,28 @@ Menu.hasMany(Menu, { foreignKey: 'parentId' });
 const app = new Koa();
 
 app
-  // 统一格式返回数据
+  // 挂载返回统一格式数据方法
   .use(responseBody())
-  // 分页
+  // 挂载分页方法
   .use(pagination())
   // 外层异常捕获中间件
   .use(async (ctx, next) => {
     try {
       await next();
     } catch (err) {
-      console.log(err);
       ctx.status = err.statusCode || 500;
       ctx.error(err);
     }
   });
 
 app
+  // token认证
   .use(auth())
+  // 请求体解析
   .use(bodyParser())
+  // 请求参数校验
   .use(parameter(app))
+  // 静态资源访问
   .use(mount('/public', static(path.join(__dirname, './public'))))
   .use(router.routes())
   .use(router.allowedMethods());
