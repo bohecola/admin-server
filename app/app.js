@@ -48,7 +48,7 @@ app
 
 (async () => {
   try {
-    await sequelize.sync();
+    await sequelize.sync({ force: true });
     await sequelize.authenticate();
     const initialUser = await User.findAll();
     !initialUser.length && await User.create({ username: 'bohecola', password: '123456', email: 'bohecola@outlook.com' });

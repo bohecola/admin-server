@@ -26,44 +26,33 @@ exports.delete = async (ctx) => {
 
   !menu && ctx.throw(404, '菜单不存在');
 
-  const removeIdList = await getChildren(id);
+  const ids = await findChildren(id);
 
-  // console.log(removeIdList, 222222222);
+  ids.unshift(id);
 
-  // 移除其关联的子菜单
-  // await Menu.destroy({ where: { parentId: id } });
-
-  // await Menu.destroy({ where: { id: id } });
+  // 移除该菜单和其所有子菜单
+  await Menu.destroy({ where: { id: ids } });
 
   ctx.success();
 }
 
-async function getChildrenIds (id) {
-  const children = await Menu.findAll({ where: { parentId: id } });
+async function findChildren(id, initialValue = []) {
 
-  const ids = children.map(child => child.id);
+  const ids = (
+    await Menu.findAll({ where: { parentId: id } })
+  ).map(child => child.id);
 
-  return ids;
-}
+  const hasChildren = ids.length !== 0;
 
+  if (hasChildren) {
+    initialValue.push(...ids);
 
-async function getChildren(id, menuIdsList = []) {
+    const promise = ids.map(id => findChildren(id, initialValue));
 
-  const children = await Menu.findAll({ where: { parentId: id } });
-
-  const childrenIds = children.map(child => child.id);
-
-  menuIdsList.push(...childrenIds);
-
-  const currentLevelCollection = await Promise.all(childrenIds.map(id => getChildrenIds(id)));
-
-  if (currentLevelCollection.every(ids => ids.length === 0)) {
-    return menuIdsList;
+    await Promise.all(promise);
   }
 
-  
-
-  return currentLevelCollection;
+  return initialValue;
 }
 
 
