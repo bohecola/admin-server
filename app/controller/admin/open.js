@@ -1,7 +1,7 @@
-const { User } = require('../model');
+const { User } = require('../../model');
 const jwt = require('jsonwebtoken');
-const { tokenSecret } = require('../conf/secret');
-const { passwordEncryption } = require('../utils/crypto');
+const { tokenSecret } = require('../../conf/secret');
+const { passwordEncryption } = require('../../utils/crypto');
 
 exports.login = async (ctx) => {
 
@@ -43,4 +43,8 @@ exports.login = async (ctx) => {
   };
 
   ctx.success(res);
+}
+
+exports.getEps = async (ctx) => {
+
 }

@@ -1,5 +1,5 @@
-const { Role } = require("../model");
-const { roleValidator } = require('../validator');
+const { Role } = require("../../../model");
+const { roleValidator } = require('../../../validator');
 const { Op } = require('sequelize');
 
 exports.add = async (ctx) => {

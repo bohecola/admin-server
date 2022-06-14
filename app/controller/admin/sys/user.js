@@ -1,5 +1,5 @@
-const { User } = require("../model");
-const { userValidator } = require('../validator');
+const { User } = require("../../../model");
+const { userValidator } = require('../../../validator');
 const { Op } = require('sequelize');
 
 exports.add = async (ctx) => {
@@ -112,7 +112,7 @@ exports.page = async (ctx) => {
   });
 
   res.list.forEach(user => {
-    user.dataValues.roleName = user.roles.map(role => role.name).join(',')
+    user.dataValues.roleName = user.roles.map(role => role.name).join(',');
     delete user.dataValues.roles;
   });
 

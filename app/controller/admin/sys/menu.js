@@ -1,5 +1,5 @@
-const { Menu } = require("../model");
-const { menuValidator } = require('../validator');
+const { Menu } = require("../../../model");
+const { menuValidator } = require('../../../validator');
 
 exports.add = async (ctx) => {
 

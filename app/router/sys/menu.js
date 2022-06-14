@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 const router = new Router();
 
-const menuController = require('../controller/menu');
+const menuController = require('../../controller/admin/sys/menu');
 
 router
   .prefix('/menu')

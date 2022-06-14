@@ -1,7 +1,7 @@
 const Router = require('@koa/router');
 const router = new Router();
 
-const roleController = require('../controller/role');
+const roleController = require('../../controller/admin/sys/role');
 
 router
   .prefix('/role')
