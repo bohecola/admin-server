@@ -48,7 +48,7 @@ app
 
 (async () => {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true });
     await sequelize.authenticate();
     const initialUser = await User.findAll();
     !initialUser.length && await User.create({ username: 'bohecola', password: '123456', email: 'bohecola@outlook.com' });
@@ -58,7 +58,19 @@ app
       { name: '系统管理', type: 0, path: '/sys', icon: 'el-icon-setting' },
       { name: '用户列表', type: 1, path: '/sys/user', viewPath: 'views/user.vue', keepAlive: 1, parentId: 1 },
       { name: '角色列表', type: 1, path: '/sys/role', viewPath: 'views/role.vue', keepAlive: 1, parentId: 1 },
-      { name: '菜单列表', type: 1, path: '/sys/menu', viewPath: 'views/menu.vue', keepAlive: 1, parentId: 1 }
+      { name: '菜单列表', type: 1, path: '/sys/menu', viewPath: 'views/menu.vue', keepAlive: 1, parentId: 1 },
+      { name: '新增', type: 2,  perms: 'sys:user:add', parentId: 2},
+      { name: '删除', type: 2,  perms: 'sys:user:delete', parentId: 2},
+      { name: '修改', type: 2,  perms: 'sys:user:update', parentId: 2},
+      { name: '查询', type: 2,  perms: 'sys:user:page,sys:user:list,sys:user:info', parentId: 2},
+      { name: '新增', type: 2,  perms: 'sys:role:add', parentId: 3},
+      { name: '删除', type: 2,  perms: 'sys:role:delete', parentId: 3},
+      { name: '修改', type: 2,  perms: 'sys:role:update', parentId: 3},
+      { name: '查询', type: 2,  perms: 'sys:role:page,sys:role:list,sys:role:info', parentId: 3},
+      { name: '新增', type: 2,  perms: 'sys:menu:add', parentId: 4},
+      { name: '删除', type: 2,  perms: 'sys:menu:delete', parentId: 4},
+      { name: '修改', type: 2,  perms: 'sys:menu:update', parentId: 4},
+      { name: '查询', type: 2,  perms: 'sys:menu:page,sys:menu:list,sys:menu:info', parentId: 4},
     ]);
     console.log('Connection has been established successfully');
 

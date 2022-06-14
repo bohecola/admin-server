@@ -12,7 +12,6 @@ const Menu = sequelize.define('menu', {
   // 无默认值，须传
   name: {
     type: DataTypes.STRING,
-    unique: true,
     allowNull: false,
     comment: '菜单名称'
   },
@@ -32,7 +31,7 @@ const Menu = sequelize.define('menu', {
     allowNull: true,
     comment: '菜单视图文件路径'
   },
-  perm: {
+  perms: {
     type: DataTypes.STRING,
     allowNull: true,
     comment: '操作权限'
@@ -46,15 +45,27 @@ const Menu = sequelize.define('menu', {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: 0,
-    comment: '路由缓存'
+    comment: '路由缓存',
+    get() {
+      return this.getDataValue('keepAlive') ? true : false;
+    },
+    set(value) {
+      this.setDataValue('keepAlive', value ? 1 : 0);
+    }
   },
   isShow: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: 1,
-    comment: '菜单是否显示'
+    comment: '菜单是否显示',
+    get() {
+      return this.getDataValue('isShow') ? true : false;
+    },
+    set(value) {
+      this.setDataValue('isShow', value ? 1 : 0);
+    }
   },
-  sort: {
+  orderNum: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: 0,
