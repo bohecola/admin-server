@@ -22,7 +22,25 @@ exports.menuValidator = {
   viewPath: { type: 'string', required: false },
   perm: { type: 'string', required: false },
   icon: { type: 'string', required: false },
-  keepAlive: { type: 'number', required: false },
-  isShow: { type: 'number', required: false },
-  sort: { type: 'number', required: false }
+  keepAlive: { type: 'boolean', required: false },
+  isShow: { type: 'boolean', required: false },
+  sort: { type: 'boolean', required: false }
+}
+
+exports.articleValidator = {
+  title: 'string',
+  content: { type: 'string', required: false },
+  status: { type: 'boolean', required: false },
+  categoryId: { type: 'int', required: false },
+  userId: { type: 'int', required: false }
+}
+
+exports.categoryValidator = {
+  name: 'string',
+  userId: { type: 'int', required: false }
+}
+
+exports.tagValidator = {
+  name: 'string',
+  userId: { type: 'int', required: false }
 }

@@ -28,11 +28,10 @@ const auth = () => {
       const user = await User.findByPk(res.userId);
 
       ctx.user = user;
-
-      await next();
     } catch(err) {
       ctx.throw(401, err);
     }
+    await next();
   }
 }
 

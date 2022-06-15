@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
-
-const sequelize = require('../database');
+const sequelize = require('../../database');
 
 const Role = sequelize.define('role', {
   id: {
@@ -25,6 +24,10 @@ const Role = sequelize.define('role', {
   remark: {
     type: DataTypes.STRING,
     comment: '角色描述'
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    comment: '标签创建人id'
   }
 });
 

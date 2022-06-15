@@ -10,11 +10,19 @@ const auth = require('./middleware/auth');
 const responseBody = require('./middleware/response');
 const pagination = require('./middleware/pagination');
 
-const { User, Role, Menu } = require('./model');
+const { User, Role, Menu, Article, Category, Tag } = require('./model');
 
+// 用户-角色 多对多关系 
 User.belongsToMany(Role, { through: 'users_roles' });
+// 角色-菜单 多对多关系
 Role.belongsToMany(Menu, { through: 'roles_menus' });
+// 菜单-菜单 一对多关系 自关联
+// 一个菜单可以有多个子级菜单，但同时一个菜单只能有一个父级菜单
 Menu.hasMany(Menu, { foreignKey: 'parentId' });
+// 文章-标签 多对多关系
+Article.belongsToMany(Tag, { through: 'articles_tags' });
+// 文章-目录 一对多关系
+Category.hasMany(Article, { foreignKey: 'categoryId' });
 
 const app = new Koa();
 
@@ -50,9 +58,6 @@ app
   try {
     await sequelize.sync();
     await sequelize.authenticate();
-    const initialUser = await User.findAll();
-    !initialUser.length && await User.create({ username: 'bohecola', password: '123456', email: 'bohecola@outlook.com' });
-
     const initialMenus = await Menu.findAll();
     !initialMenus.length && await Menu.bulkCreate([
       { name: '系统管理', type: 0, path: '/sys', icon: 'el-icon-setting' },
@@ -72,6 +77,15 @@ app
       { name: '修改', type: 2,  perms: 'sys:menu:update', parentId: 4},
       { name: '查询', type: 2,  perms: 'sys:menu:page,sys:menu:list,sys:menu:info', parentId: 4},
     ]);
+
+    const initialRoles = await Role.findAll();
+    !initialRoles.length && await Role.bulkCreate([
+      { name: '学生', label: 'student', menuIdList: [1, 2, 3, 4], userId: 1 },
+      { name: '老师', label: 'teacher', menuIdList: [1, 2, 3, 4], userId: 1 }
+    ]);
+
+    const initialUser = await User.findAll();
+    !initialUser.length && await User.create({ username: 'bohecola', password: '123456', email: 'bohecola@outlook.com' });
     console.log('Connection has been established successfully');
 
     app.listen(3000, () => {

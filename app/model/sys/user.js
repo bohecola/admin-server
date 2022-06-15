@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../database');
-const { passwordEncryption } = require('../utils/crypto');
+const sequelize = require('../../database');
+const { passwordEncryption } = require('../../utils/crypto');
 
 const User = sequelize.define('user', {
   id: {

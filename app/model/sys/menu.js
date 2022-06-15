@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../database');
+const sequelize = require('../../database');
 
 const Menu = sequelize.define('menu', {
   id: {
@@ -45,28 +45,16 @@ const Menu = sequelize.define('menu', {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: 0,
-    comment: '路由缓存',
-    get() {
-      return this.getDataValue('keepAlive') ? true : false;
-    },
-    set(value) {
-      this.setDataValue('keepAlive', value ? 1 : 0);
-    }
+    comment: '路由缓存'
   },
   isShow: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: 1,
     comment: '菜单是否显示',
-    get() {
-      return this.getDataValue('isShow') ? true : false;
-    },
-    set(value) {
-      this.setDataValue('isShow', value ? 1 : 0);
-    }
   },
   orderNum: {
-    type: DataTypes.BOOLEAN,
+    type: DataTypes.INTEGER,
     allowNull: false,
     defaultValue: 0,
     comment: '菜单排序'
