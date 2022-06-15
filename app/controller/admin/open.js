@@ -48,14 +48,23 @@ exports.login = async (ctx) => {
 }
 
 exports.getEps = async (ctx) => {
-  const moduleDirs = readdirSync(__dirname).filter(name => {
+
+  const dirs = readdirSync(__dirname).filter(name => {
     const stat = statSync(path.join(__dirname, name));
     return stat.isDirectory();
   });
 
-  console.log(moduleDirs);
+  const apis = dirs.reduce((prev, dirName) => {
 
-  // console.log(path.join(__dirname, 'sys'));
+    const ctrlFiles = readdirSync(path.join(__dirname, dirName));
+
+
+    ctrlNamespaces.map(namespace => {
+    
+    });
+
+    return prev;
+  }, []);
 
   // const apiCollection = moduleDirs.reduce((prev, moduleName) => {
   
