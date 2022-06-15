@@ -49,43 +49,30 @@ exports.login = async (ctx) => {
 
 exports.getEps = async (ctx) => {
 
-  const dirs = readdirSync(__dirname).filter(name => {
-    const stat = statSync(path.join(__dirname, name));
+  const namespaces = readdirSync(__dirname).filter(namespace => {
+
+    const stat = statSync(path.join(__dirname, namespace));
+
     return stat.isDirectory();
   });
 
-  const apis = dirs.reduce((prev, dirName) => {
+  const apis = namespaces.reduce((prev, namespace) => {
 
-    const ctrlFiles = readdirSync(path.join(__dirname, dirName));
+    const controllerNames = readdirSync(path.join(__dirname, namespace)).map(filename => filename.substring(0, filename.indexOf('.')));
 
+    controllerNames.forEach(controllerName => {
 
-    ctrlNamespaces.map(namespace => {
-    
+      const controllerPath = path.join(__dirname, `${namespace}/${controllerName}`);
+
+      const controller = require(controllerPath);
+
+      Object.keys(controller).forEach(methodName => {
+        prev.push(`${namespace}/${controllerName}/${methodName}`);
+      });
     });
 
     return prev;
   }, []);
 
-  // const apiCollection = moduleDirs.reduce((prev, moduleName) => {
-  
-  //   const controllerFiles = readdirSync(resolve(__dirname, moduleName));
-
-  //   const controllers = controllerFiles.map((ctrlFileName) => {
-  //     return ctrlFileName.substring(0, ctrlFileName.indexOf('.'));
-  //   });
-  
-  //   const moduleApis = controllers.map(ctrlName => `${moduleName}/${ctrlName}`);
-  
-  //   prev.push(...moduleApis);
-
-  //   return prev;
-  // }, []);
-
-  // const arr = apiCollection.map(path => {
-  //   const module = require(resolve(__dirname, path));
-  //   Object.keys(module);
-  //   return 
-  // });
-
-  ctx.success()
+  ctx.success(apis)
 }
