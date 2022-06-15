@@ -53,8 +53,8 @@ app
     const initialUser = await User.findAll();
     !initialUser.length && await User.create({ username: 'bohecola', password: '123456', email: 'bohecola@outlook.com' });
 
-    const currentMenus = await Menu.findAll();
-    !currentMenus.length && await Menu.bulkCreate([
+    const initialMenus = await Menu.findAll();
+    !initialMenus.length && await Menu.bulkCreate([
       { name: '系统管理', type: 0, path: '/sys', icon: 'el-icon-setting' },
       { name: '用户列表', type: 1, path: '/sys/user', viewPath: 'views/user.vue', keepAlive: 1, parentId: 1 },
       { name: '角色列表', type: 1, path: '/sys/role', viewPath: 'views/role.vue', keepAlive: 1, parentId: 1 },

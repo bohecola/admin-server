@@ -5,7 +5,11 @@ const { User } = require('../model');
 const auth = () => {
   return async (ctx, next) => {
 
-    const whiteList = ['/login', '/posts'].map(path => `/api${path}`);
+    const openApis = ['/post'].map(path => `/api${path}`);
+
+    const whiteList = ['/login', '/eps'].map(path => `/api/admin${path}`);
+
+    whiteList.push(...openApis);
 
     const flag = whiteList.indexOf(ctx.path) !== -1;
 

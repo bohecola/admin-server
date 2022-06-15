@@ -24,6 +24,5 @@ exports.menuValidator = {
   icon: { type: 'string', required: false },
   keepAlive: { type: 'number', required: false },
   isShow: { type: 'number', required: false },
-  sort: { type: 'number', required: false },
-  // parentId: { required: false }
+  sort: { type: 'number', required: false }
 }

@@ -2,6 +2,8 @@ const { User } = require('../../model');
 const jwt = require('jsonwebtoken');
 const { tokenSecret } = require('../../conf/secret');
 const { passwordEncryption } = require('../../utils/crypto');
+const { readdirSync, statSync } = require('fs');
+const path = require('path');
 
 exports.login = async (ctx) => {
 
@@ -46,5 +48,35 @@ exports.login = async (ctx) => {
 }
 
 exports.getEps = async (ctx) => {
+  const moduleDirs = readdirSync(__dirname).filter(name => {
+    const stat = statSync(path.join(__dirname, name));
+    return stat.isDirectory();
+  });
 
+  console.log(moduleDirs);
+
+  // console.log(path.join(__dirname, 'sys'));
+
+  // const apiCollection = moduleDirs.reduce((prev, moduleName) => {
+  
+  //   const controllerFiles = readdirSync(resolve(__dirname, moduleName));
+
+  //   const controllers = controllerFiles.map((ctrlFileName) => {
+  //     return ctrlFileName.substring(0, ctrlFileName.indexOf('.'));
+  //   });
+  
+  //   const moduleApis = controllers.map(ctrlName => `${moduleName}/${ctrlName}`);
+  
+  //   prev.push(...moduleApis);
+
+  //   return prev;
+  // }, []);
+
+  // const arr = apiCollection.map(path => {
+  //   const module = require(resolve(__dirname, path));
+  //   Object.keys(module);
+  //   return 
+  // });
+
+  ctx.success()
 }

@@ -1,5 +1,5 @@
 const Router = require('@koa/router');
-const commController = require('../controller/admin/comm');
+const commController = require('../../controller/admin/comm');
 
 const router = new Router();
 
