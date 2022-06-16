@@ -31,16 +31,16 @@ exports.articleValidator = {
   title: 'string',
   content: { type: 'string', required: false },
   status: { type: 'boolean', required: false },
-  categoryId: { type: 'int', required: false },
-  userId: { type: 'int', required: false }
+  // 目录id可以传null，这里不做限制
+  tagIdList: { type: 'array', required: false }
 }
 
 exports.categoryValidator = {
   name: 'string',
-  userId: { type: 'int', required: false }
+  articleIdList: { type: 'array', required: false }
 }
 
 exports.tagValidator = {
   name: 'string',
-  userId: { type: 'int', required: false }
+  articleIdList: { type: 'array', required: false }
 }

@@ -10,7 +10,7 @@ exports.add = async (ctx) => {
 
   const category = await Category.create(ctx.request.body);
 
-  await category.addArticles(articleIdList);
+  articleIdList && await category.addArticles(articleIdList);
 
   ctx.success(category.id);
 }
@@ -38,7 +38,7 @@ exports.update = async (ctx) => {
 
   await Category.update(ctx.request.body, { where: { id: id } });
 
-  await category.setArticles(articleIdList);
+  articleIdList && await category.setArticles(articleIdList);
 
   ctx.success();
 }

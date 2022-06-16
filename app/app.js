@@ -12,21 +12,19 @@ const pagination = require('./middleware/pagination');
 
 const { User, Role, Menu, Article, Category, Tag } = require('./model');
 
-// 用户-角色 多对多关系
+// 用户-角色 多对多关系 （仅设置一个用户可以添加多个角色）
 User.belongsToMany(Role, { through: 'users_roles' });
-// 角色-菜单 多对多关系
+// 角色-菜单 多对多关系 （仅设置一个角色可以添加多个菜单）
 Role.belongsToMany(Menu, { through: 'roles_menus' });
-// 菜单-菜单 一对多关系 自关联
-// 一个菜单可以有多个子级菜单，但同时一个菜单只能有一个父级菜单
+// 菜单-菜单 一对多关系 自关联 （一个菜单可以添加多个子菜单），一个菜单可以有多个子级菜单，但同时一个菜单只能有一个父级菜单
 Menu.hasMany(Menu, { foreignKey: 'parentId' });
-Role.belongsTo(User, { as: 'creator', foreignKey: 'creator' })
-// 文章-标签 多对多关系
+
+// 文章-标签 多对多关系 （一个文章可以添加多个标签）
 Article.belongsToMany(Tag, { through: 'articles_tags' });
-// 文章-目录 一对多关系
+// 标签-文章 多对多关系 （一个标签可以添加多个文章）
+Tag.belongsToMany(Article, { through: 'articles_tags' });
+// 目录-文章 一对多关系 （一个目录可以添加多个文章），文章表设置名为categoryId的外键，默认为目录表的主键
 Category.hasMany(Article, { foreignKey: 'categoryId' });
-User.hasMany(Article, { foreignKey: 'userId' });
-User.hasMany(Category, { foreignKey: 'userId' });
-User.hasMany(Tag, { foreignKey: 'userId' });
 
 const app = new Koa();
 
@@ -41,7 +39,7 @@ app
       await next();
     } catch (err) {
       console.log(err)
-      ctx.status = err.statusCode || 500;
+      ctx.status = err.statusCode || err.status || 500;
       ctx.error(err);
     }
   });
@@ -60,7 +58,7 @@ app
 
 (async () => {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
     await sequelize.authenticate();
     const menus = await Menu.findAll();
     !menus.length && await Menu.bulkCreate([
@@ -71,15 +69,15 @@ app
       { name: '新增', type: 2,  perms: 'sys:user:add', parentId: 2},
       { name: '删除', type: 2,  perms: 'sys:user:delete', parentId: 2},
       { name: '修改', type: 2,  perms: 'sys:user:update', parentId: 2},
-      { name: '查询', type: 2,  perms: 'sys:user:page,sys:user:list,sys:user:info', parentId: 2},
+      { name: '查询', type: 2,  perms: 'sys:user:page,sys:user:list,sys:user:info', parentId: 2 },
       { name: '新增', type: 2,  perms: 'sys:role:add', parentId: 3},
       { name: '删除', type: 2,  perms: 'sys:role:delete', parentId: 3},
       { name: '修改', type: 2,  perms: 'sys:role:update', parentId: 3},
-      { name: '查询', type: 2,  perms: 'sys:role:page,sys:role:list,sys:role:info', parentId: 3},
+      { name: '查询', type: 2,  perms: 'sys:role:page,sys:role:list,sys:role:info', parentId: 3 },
       { name: '新增', type: 2,  perms: 'sys:menu:add', parentId: 4},
       { name: '删除', type: 2,  perms: 'sys:menu:delete', parentId: 4},
       { name: '修改', type: 2,  perms: 'sys:menu:update', parentId: 4},
-      { name: '查询', type: 2,  perms: 'sys:menu:page,sys:menu:list,sys:menu:info', parentId: 4},
+      { name: '查询', type: 2,  perms: 'sys:menu:page,sys:menu:list,sys:menu:info', parentId: 4 }
     ]);
 
     const roles = await Role.findAll();

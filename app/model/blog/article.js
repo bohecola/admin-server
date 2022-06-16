@@ -24,22 +24,6 @@ const Article = sequelize.define('article', {
     allowNull: false,
     defaultValue: 1,
     comment: '文章状态'
-  },
-  categoryId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'categories',
-      key: 'id'
-    },
-    comment: '文章目录id'
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'users',
-      key: 'id'
-    },
-    comment: '文章创建人id'
   }
 });
 

@@ -6,13 +6,11 @@ exports.add = async (ctx) => {
 
   ctx.verifyParams(articleValidator);
 
-  const { categoryId, tagIdList } = ctx.request.body;
+  const { tagIdList } = ctx.request.body;
 
   const article = await Article.create(ctx.request.body);
 
-  await article.addCategory(categoryId);
-
-  await article.addTags(tagIdList);
+  tagIdList && await article.addTags(tagIdList);
 
   ctx.success(article.id);
 }
@@ -32,7 +30,7 @@ exports.update = async (ctx) => {
 
   ctx.verifyParams(articleValidator);
 
-  const { id, categoryId, tagIdList } = ctx.request.body;
+  const { id, tagIdList } = ctx.request.body;
 
   const article = await Article.findByPk(id);
 
@@ -40,9 +38,7 @@ exports.update = async (ctx) => {
 
   await Article.update(ctx.request.body, { where: { id: id } });
 
-  await article.setCategory(categoryId);
-
-  await article.setTags(tagIdList);
+  tagIdList && await article.setTags(tagIdList);
 
   ctx.success();
 }

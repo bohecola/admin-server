@@ -10,7 +10,7 @@ exports.add = async (ctx) => {
 
   const tag = await Tag.create(ctx.request.body);
 
-  await tag.addArticles(articleIdList);
+  articleIdList && await tag.addArticles(articleIdList);
 
   ctx.success(tag.id);
 }
@@ -38,7 +38,7 @@ exports.update = async (ctx) => {
 
   await Tag.update(ctx.request.body, { where: { id: id } });
 
-  await tag.setArticles(articleIdList);
+  articleIdList && await tag.setArticles(articleIdList);
 
   ctx.success();
 }
