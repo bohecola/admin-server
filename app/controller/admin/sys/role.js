@@ -66,13 +66,13 @@ exports.info = async (ctx) => {
 
 exports.list = async (ctx) => {
 
-  const { keywords = '' } = ctx.query;
+  const { keywords } = ctx.query;
 
   const roles = await Role.findAll({
     where: {
       [Op.or]: [
-        { name: { [Op.like]: `%${keywords}%` } },
-        { label: { [Op.like]: `%${keywords}%` } }
+        { name: { [Op.like]: `%${keywords || ''}%` } },
+        { label: { [Op.like]: `%${keywords || ''}%` } }
       ]
     },
     order: [['createdAt', 'DESC']]

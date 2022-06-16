@@ -12,19 +12,19 @@ const pagination = (defaultOptions) => {
       const { 
         currentPage = defaultOptions.currentPage,
         pageSize = defaultOptions.pageSize,
-        keywords = '',
+        keywords,
         likeField = [],
         exclude = [],
         filter = {},
-        association = '',
-        associationAttr = ['id'],
+        associations = [],
         order = [['createdAt', 'DESC']]
       } = options;
 
       const query = {
         offset: (currentPage - 1) * pageSize,
         limit: ~~pageSize,
-        order: order
+        order: order,
+        distinct: true
       };
 
       if (exclude.length) {
@@ -34,10 +34,10 @@ const pagination = (defaultOptions) => {
         Object.assign(query, obj);
       }
 
-      if (keywords && likeField.length) {
+      if (likeField.length) {
         const obj = {
           where: {
-            [Op.or]: likeField.map(field => ({[field]: {[Op.like]: `%${keywords}%`}})),
+            [Op.or]: likeField.map(field => ({[field]: {[Op.like]: `%${keywords || ''}%`}})),
             ...filter
           }
         };
@@ -45,13 +45,9 @@ const pagination = (defaultOptions) => {
         Object.assign(query, obj);
       }
 
-      if (association) {
+      if (associations.length) {
         const obj = {
-          include: {
-            association: association,
-            attributes: associationAttr,
-            through: { attributes: [] }
-          }
+          include: associations
         };
 
         Object.assign(query, obj);

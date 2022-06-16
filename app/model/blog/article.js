@@ -22,7 +22,7 @@ const Article = sequelize.define('article', {
   status: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: 1,
+    defaultValue: 0,
     comment: '文章状态'
   }
 });

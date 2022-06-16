@@ -71,7 +71,7 @@ exports.info = async (ctx) => {
 
 exports.list = async (ctx) => {
   
-  const { keywords = '' } = ctx.query;
+  const { keywords } = ctx.query;
 
   const users = await User.findAll({
     attributes: { exclude: 'password' },
@@ -82,8 +82,8 @@ exports.list = async (ctx) => {
     },
     where: {
       [Op.or]: [
-        { username: { [Op.like]: `%${keywords}%` } },
-        { name: { [Op.like]: `%${keywords}%` } }
+        { username: { [Op.like]: `%${keywords || ''}%` } },
+        { name: { [Op.like]: `%${keywords || ''}%` } }
       ]
     },
     order: [['createdAt', 'DESC']]
@@ -107,8 +107,13 @@ exports.page = async (ctx) => {
     keywords: keywords,
     likeField: ['username', 'name'],
     exclude: ['password'],
-    association: 'roles',
-    associationAttr: ['name']
+    associations: [
+      {
+        association: 'roles',
+        attributes: ['name'],
+        through: { attributes: [] }
+      }
+    ]
   });
 
   res.list.forEach(user => {

@@ -48,17 +48,20 @@ exports.info = async (ctx) => {
   const { id } = ctx.query;
 
   const article = await Article.findByPk(id, {
-    include: [{
-        association: 'categories',
-        attributes: ['id', 'name']
-      },{
+    include: [
+      {
         association: 'tags',
         attributes: ['id', 'name'],
         through: { attributes: [] }
-    }]
+      }
+    ]
   });
 
   !article && ctx.throw(404, '文章不存在');
+
+  article.setDataValue('tagIdList', article.tags.map(tag => tag.id));
+
+  delete article.dataValues.tags;
 
   ctx.success(article);
 }
@@ -69,7 +72,7 @@ exports.list = async (ctx) => {
 
   const articles = await Article.findAll({
     where: {
-      name: { [Op.like]: `%${keywords}%` }
+      title: { [Op.like]: `%${keywords || ''}%` }
     },
     order: [['createdAt', 'DESC']]
   });
@@ -85,7 +88,27 @@ exports.page = async (ctx) => {
     currentPage: currentPage,
     pageSize: pageSize,
     keywords: keywords,
-    likeField: ['name']
+    likeField: ['name'],
+    exclude: ['categoryId'],
+    associations: [
+      {
+        association: 'category',
+        attributes: ['name']
+      },
+      {
+        association: 'tags',
+        attributes: ['name'],
+        through: { attributes: [] }
+      }
+    ]
+  });
+
+  res.list.forEach(article => {
+    article.setDataValue('categoryName', article.dataValues.category.name);
+    delete article.dataValues.category;
+
+    article.setDataValue('tagNames', article.dataValues.tags.map(tag => tag.name).join(','));
+    delete article.dataValues.tags;
   });
 
   ctx.success(res);

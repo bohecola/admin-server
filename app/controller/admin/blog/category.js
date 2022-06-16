@@ -65,7 +65,7 @@ exports.list = async (ctx) => {
 
   const categories = await Category.findAll({
     where: {
-      name: { [Op.like]: `%${keywords}%` }
+      name: { [Op.like]: `%${keywords || ''}%` }
     },
     order: [['createdAt', 'DESC']]
   });
