@@ -12,14 +12,6 @@ const Tag = sequelize.define('tag', {
     type: DataTypes.STRING,
     allowNull: false,
     comment: '标签名称'
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'users',
-      key: 'id'
-    },
-    comment: '标签创建人id'
   }
 });
 

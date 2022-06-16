@@ -24,10 +24,6 @@ const Role = sequelize.define('role', {
   remark: {
     type: DataTypes.STRING,
     comment: '角色描述'
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    comment: '标签创建人id'
   }
 });
 

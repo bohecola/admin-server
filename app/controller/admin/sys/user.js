@@ -1,6 +1,6 @@
+const { Op } = require('sequelize');
 const { User } = require("../../../model");
 const { userValidator } = require('../../../validator');
-const { Op } = require('sequelize');
 
 exports.add = async (ctx) => {
 

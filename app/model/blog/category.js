@@ -14,14 +14,6 @@ const Category = sequelize.define('category', {
     allowNull: false,
     unique: true,
     comment: '目录名称'
-  },
-  userId: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'users',
-      key: 'id'
-    },
-    comment: '目录创建人id'
   }
 });
 

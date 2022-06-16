@@ -12,17 +12,21 @@ const pagination = require('./middleware/pagination');
 
 const { User, Role, Menu, Article, Category, Tag } = require('./model');
 
-// 用户-角色 多对多关系 
+// 用户-角色 多对多关系
 User.belongsToMany(Role, { through: 'users_roles' });
 // 角色-菜单 多对多关系
 Role.belongsToMany(Menu, { through: 'roles_menus' });
 // 菜单-菜单 一对多关系 自关联
 // 一个菜单可以有多个子级菜单，但同时一个菜单只能有一个父级菜单
 Menu.hasMany(Menu, { foreignKey: 'parentId' });
+Role.belongsTo(User, { as: 'creator', foreignKey: 'creator' })
 // 文章-标签 多对多关系
 Article.belongsToMany(Tag, { through: 'articles_tags' });
 // 文章-目录 一对多关系
 Category.hasMany(Article, { foreignKey: 'categoryId' });
+User.hasMany(Article, { foreignKey: 'userId' });
+User.hasMany(Category, { foreignKey: 'userId' });
+User.hasMany(Tag, { foreignKey: 'userId' });
 
 const app = new Koa();
 
@@ -56,10 +60,10 @@ app
 
 (async () => {
   try {
-    await sequelize.sync();
+    await sequelize.sync({ force: true });
     await sequelize.authenticate();
-    const initialMenus = await Menu.findAll();
-    !initialMenus.length && await Menu.bulkCreate([
+    const menus = await Menu.findAll();
+    !menus.length && await Menu.bulkCreate([
       { name: '系统管理', type: 0, path: '/sys', icon: 'el-icon-setting' },
       { name: '用户列表', type: 1, path: '/sys/user', viewPath: 'views/user.vue', keepAlive: 1, parentId: 1 },
       { name: '角色列表', type: 1, path: '/sys/role', viewPath: 'views/role.vue', keepAlive: 1, parentId: 1 },
@@ -78,14 +82,25 @@ app
       { name: '查询', type: 2,  perms: 'sys:menu:page,sys:menu:list,sys:menu:info', parentId: 4},
     ]);
 
-    const initialRoles = await Role.findAll();
-    !initialRoles.length && await Role.bulkCreate([
-      { name: '学生', label: 'student', menuIdList: [1, 2, 3, 4], userId: 1 },
-      { name: '老师', label: 'teacher', menuIdList: [1, 2, 3, 4], userId: 1 }
-    ]);
+    const roles = await Role.findAll();
+    if (!roles.length) {
+      const initialRoles = await Role.bulkCreate([
+        { name: '学生', label: 'student', userId: 1 },
+        { name: '老师', label: 'teacher', userId: 1 }
+      ]);
 
-    const initialUser = await User.findAll();
-    !initialUser.length && await User.create({ username: 'bohecola', password: '123456', email: 'bohecola@outlook.com' });
+      await Promise.all(initialRoles.map(role => role.addMenus([1, 2, 3, 4])));
+    }
+
+    const users = await User.findAll();
+    if (!users.length) {
+      const initialUsers = await User.bulkCreate([
+        { username: 'bohecola', password: '123456', email: 'bohecola@outlook.com', roleIdList: [1, 2] },
+        { username: 'bohe', password: '123456', email: 'bohecola@outlook.com', roleIdList: [1, 2] }
+      ]);
+
+      await Promise.all(initialUsers.map(user => user.addRoles([1, 2])));
+    }
     console.log('Connection has been established successfully');
 
     app.listen(3000, () => {

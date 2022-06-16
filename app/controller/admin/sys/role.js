@@ -1,6 +1,6 @@
+const { Op } = require('sequelize');
 const { Role } = require("../../../model");
 const { roleValidator } = require('../../../validator');
-const { Op } = require('sequelize');
 
 exports.add = async (ctx) => {
 
@@ -30,7 +30,7 @@ exports.update = async (ctx) => {
 
   ctx.verifyParams(roleValidator);
 
-  const { id, menuIdList } = await ctx.request.body;
+  const { id, menuIdList } = ctx.request.body;
 
   const role = await Role.findByPk(id);
 
@@ -82,6 +82,7 @@ exports.list = async (ctx) => {
 }
 
 exports.page = async (ctx) => {
+
   const { currentPage, pageSize, keywords } = ctx.query;
 
   const res = await ctx.paginate(Role, {
