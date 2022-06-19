@@ -8,7 +8,7 @@ const Article = sequelize.define('article', {
     autoIncrement: true,
     comment: '文章id'
   },
-  // 无默认值，须传
+  // Required
   title: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -18,6 +18,15 @@ const Article = sequelize.define('article', {
   content: {
     type: DataTypes.TEXT,
     comment: '文章内容'
+  },
+  desc: {
+    type: DataTypes.STRING,
+    comment: '文章简介'
+  },
+  slug: {
+    type: DataTypes.STRING,
+    unique: true,
+    comment: 'URL-Slug'
   },
   status: {
     type: DataTypes.BOOLEAN,

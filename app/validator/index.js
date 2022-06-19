@@ -31,8 +31,10 @@ exports.articleValidator = {
   title: 'string',
   content: { type: 'string', required: false },
   status: { type: 'boolean', required: false },
-  // 目录id可以传null，这里不做限制
-  tagIdList: { type: 'array', required: false }
+  // 目录id可以传null，这里不做限制（categoryId）
+  tagIdList: { type: 'array', required: false },
+  desc: { type: 'string', required: false },
+  slug: { type: 'string', required: false}
 }
 
 exports.categoryValidator = {

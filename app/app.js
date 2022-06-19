@@ -67,6 +67,7 @@ app
 
 (async () => {
   try {
+    // { force: true }
     await sequelize.sync({ force: true });
     await sequelize.authenticate();
     const menus = await Menu.findAll();

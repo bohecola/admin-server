@@ -9,13 +9,13 @@ const Menu = sequelize.define('menu', {
     primaryKey: true,
     comment: '菜单id'
   },
-  // 无默认值，须传
+  // Required
   name: {
     type: DataTypes.STRING,
     allowNull: false,
     comment: '菜单名称'
   },
-  // 无默认值，须传
+  // Required
   type: {
     type: DataTypes.INTEGER,
     allowNull: false,

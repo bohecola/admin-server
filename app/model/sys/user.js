@@ -10,14 +10,14 @@ const User = sequelize.define('user', {
     primaryKey: true,
     comment: '用户id'
   },
-  // 无默认值，须传
+  // Required
   username: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
     comment: '用户名'
   },
-  // 无默认值，须传
+  // Required
   password: {
     type: DataTypes.STRING,
     allowNull: false,

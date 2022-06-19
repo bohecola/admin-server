@@ -8,7 +8,7 @@ const Category = sequelize.define('category', {
     autoIncrement: true,
     comment: '目录id'
   },
-  // 无默认值，须传
+  // Required
   name: {
     type: DataTypes.STRING,
     allowNull: false,
