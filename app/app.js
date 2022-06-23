@@ -2,6 +2,7 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const static = require('koa-static');
 const mount = require('koa-mount');
+const cors = require('@koa/cors');
 const parameter = require('koa-parameter');
 const path = require('path');
 const router = require('./router');
@@ -38,6 +39,8 @@ Article.belongsTo(Category);
 const app = new Koa();
 
 app
+  // 跨域
+  .use(cors())
   // 挂载返回统一格式数据方法
   .use(responseBody())
   // 挂载分页方法
@@ -68,7 +71,7 @@ app
 (async () => {
   try {
     // { force: true }
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
     await sequelize.authenticate();
     const menus = await Menu.findAll();
     !menus.length && await Menu.bulkCreate([
