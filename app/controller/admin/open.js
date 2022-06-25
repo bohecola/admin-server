@@ -47,32 +47,41 @@ exports.login = async (ctx) => {
   ctx.success(res);
 }
 
+function readFileList(dir, fileList = []) {
+  const files = readdirSync(dir);
+
+  files.forEach((item, index) => {
+    const fullPath = path.join(dir, item);
+    const stat = statSync(fullPath);
+    if (stat.isDirectory()) {
+      readFileList(path.join(dir, item), fileList)
+    } else {
+      fileList.push(fullPath);
+    }
+  });
+  
+  return fileList;
+}
+
 exports.getEps = async (ctx) => {
 
-  const namespaces = readdirSync(__dirname).filter(namespace => {
+  const fileList = readFileList(__dirname);
 
-    const stat = statSync(path.join(__dirname, namespace));
+  const apis = fileList.reduce((prev, filePath) => {
 
-    return stat.isDirectory();
-  });
+    const controller = require(filePath);
 
-  const apis = namespaces.reduce((prev, namespace) => {
+    Object.keys(controller).forEach(methodName => {
 
-    const controllerNames = readdirSync(path.join(__dirname, namespace)).map(filename => filename.substring(0, filename.indexOf('.')));
+      const relativePath = filePath.replace(__dirname, '');
 
-    controllerNames.forEach(controllerName => {
+      const apiPath = relativePath.replace('.js', `/${methodName}`);
 
-      const controllerPath = path.join(__dirname, `${namespace}/${controllerName}`);
-
-      const controller = require(controllerPath);
-
-      Object.keys(controller).forEach(methodName => {
-        prev.push(`${namespace}/${controllerName}/${methodName}`);
-      });
+      prev.push(apiPath);
     });
 
     return prev;
   }, []);
 
-  ctx.success(apis)
+  ctx.success(apis);
 }
