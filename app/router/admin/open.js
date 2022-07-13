@@ -6,6 +6,7 @@ const router = new Router();
 router
   .prefix('/open')
   .post('/login', openController.login)
+  .post('/refreshToken', openController.refreshToken)
   .get('/eps', openController.getEps);
 
 module.exports = router;

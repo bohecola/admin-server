@@ -47,20 +47,35 @@ exports.login = async (ctx) => {
   ctx.success(res);
 }
 
-function readFileList(dir, fileList = []) {
-  const files = readdirSync(dir);
-
-  files.forEach((item, index) => {
-    const fullPath = path.join(dir, item);
-    const stat = statSync(fullPath);
-    if (stat.isDirectory()) {
-      readFileList(path.join(dir, item), fileList)
-    } else {
-      fileList.push(fullPath);
-    }
-  });
+exports.refreshToken = async (ctx) => {
+  try {
+    const { userId } = jwt.verify(ctx.request.body.refreshToken, tokenSecret);
   
-  return fileList;
+    const token = jwt.sign(
+      { userId: userId },
+      tokenSecret,
+      { expiresIn: '2h' }
+    );
+  
+    const refreshToken = jwt.sign(
+      { userId: userId },
+      tokenSecret,
+      { expiresIn: '36h' }
+    );
+  
+    const hour = 60 * 60;
+  
+    const res = {
+      expire: 2 * hour,
+      token: token,
+      refreshExpire: 36 * hour,
+      refreshToken: refreshToken
+    };
+
+    ctx.success(res);
+  } catch(err) {
+    ctx.throw(401, err);
+  }
 }
 
 exports.getEps = async (ctx) => {
@@ -84,4 +99,20 @@ exports.getEps = async (ctx) => {
   }, []);
 
   ctx.success(apis);
+}
+
+function readFileList(dir, fileList = []) {
+  const files = readdirSync(dir);
+
+  files.forEach((item, index) => {
+    const fullPath = path.join(dir, item);
+    const stat = statSync(fullPath);
+    if (stat.isDirectory()) {
+      readFileList(path.join(dir, item), fileList)
+    } else {
+      fileList.push(fullPath);
+    }
+  });
+  
+  return fileList;
 }
