@@ -70,7 +70,7 @@ exports.permmenu = async (ctx) => {
 
   const permMenu = menus.sort((a, b) => a.orderNum - b.orderNum);
 
-  ctx.success(permMenu);
+  ctx.success({ menus: permMenu, perms: [] });
 }
 
 // 文件上传

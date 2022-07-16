@@ -76,9 +76,9 @@ app
     const menus = await Menu.findAll();
     !menus.length && await Menu.bulkCreate([
       { name: '系统管理', type: 0, path: '/sys', icon: 'el-icon-setting' },
-      { name: '用户列表', type: 1, path: '/sys/user', viewPath: 'views/user.vue', keepAlive: 1, parentId: 1 },
-      { name: '角色列表', type: 1, path: '/sys/role', viewPath: 'views/role.vue', keepAlive: 1, parentId: 1 },
-      { name: '菜单列表', type: 1, path: '/sys/menu', viewPath: 'views/menu.vue', keepAlive: 1, parentId: 1 },
+      { name: '用户列表', type: 1, path: '/sys/user', viewPath: 'cool/modules/base/views/user.vue', keepAlive: 1, parentId: 1 },
+      { name: '角色列表', type: 1, path: '/sys/role', viewPath: 'cool/modules/base/views/role.vue', keepAlive: 1, parentId: 1 },
+      { name: '菜单列表', type: 1, path: '/sys/menu', viewPath: 'cool/modules/base/views/menu.vue', keepAlive: 1, parentId: 1 },
       { name: '新增', type: 2,  perms: 'sys:user:add', parentId: 2 },
       { name: '删除', type: 2,  perms: 'sys:user:delete', parentId: 2 },
       { name: '修改', type: 2,  perms: 'sys:user:update', parentId: 2 },
