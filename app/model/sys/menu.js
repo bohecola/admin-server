@@ -21,7 +21,7 @@ const Menu = sequelize.define('menu', {
     allowNull: false,
     comment: '菜单类型'
   },
-  path: {
+  router: {
     type: DataTypes.STRING,
     allowNull: true,
     comment: '节点路由'

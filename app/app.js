@@ -75,10 +75,10 @@ app
     await sequelize.authenticate();
     const menus = await Menu.findAll();
     !menus.length && await Menu.bulkCreate([
-      { name: '系统管理', type: 0, path: '/sys', icon: 'el-icon-setting' },
-      { name: '用户列表', type: 1, path: '/sys/user', viewPath: 'cool/modules/base/views/user.vue', keepAlive: 1, parentId: 1 },
-      { name: '角色列表', type: 1, path: '/sys/role', viewPath: 'cool/modules/base/views/role.vue', keepAlive: 1, parentId: 1 },
-      { name: '菜单列表', type: 1, path: '/sys/menu', viewPath: 'cool/modules/base/views/menu.vue', keepAlive: 1, parentId: 1 },
+      { name: '系统管理', type: 0, router: '/sys', icon: 'Tools' },
+      { name: '用户列表', type: 1, router: '/sys/user', icon: 'UserFilled', viewPath: 'modules/base/views/user.vue', keepAlive: 1, parentId: 1 },
+      { name: '角色列表', type: 1, router: '/sys/role', icon: 'Avatar', viewPath: 'modules/base/views/role.vue', keepAlive: 1, parentId: 1 },
+      { name: '菜单列表', type: 1, router: '/sys/menu', icon: 'Menu', viewPath: 'modules/base/views/menu.vue', keepAlive: 1, parentId: 1 },
       { name: '新增', type: 2,  perms: 'sys:user:add', parentId: 2 },
       { name: '删除', type: 2,  perms: 'sys:user:delete', parentId: 2 },
       { name: '修改', type: 2,  perms: 'sys:user:update', parentId: 2 },
@@ -105,8 +105,8 @@ app
     const users = await User.findAll();
     if (!users.length) {
       const initialUsers = await User.bulkCreate([
-        { username: 'bohecola', password: '123456', email: 'bohecola@outlook.com', roleIdList: [1, 2] },
-        { username: 'bohe', password: '123456', email: 'bohecola@outlook.com', roleIdList: [1, 2] }
+        { username: 'bohecola', password: '123456', nickName: 'bohecola', email: 'bohecola@outlook.com', roleIdList: [1, 2] },
+        { username: 'bohe', password: '123456', nickName: 'bohe', email: 'bohecola@outlook.com', roleIdList: [1, 2] }
       ]);
       await Promise.all(initialUsers.map(user => user.addRoles([1, 2])));
     }
