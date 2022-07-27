@@ -32,7 +32,7 @@ const User = sequelize.define('user', {
     defaultValue: 1,
     comment: '密码版本'
   },
-  nickname: {
+  nickName: {
     type: DataTypes.STRING,
     comment: '用户昵称'
   },

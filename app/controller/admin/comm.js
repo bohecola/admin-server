@@ -15,19 +15,17 @@ exports.person = async (ctx) => {
 // 修改个人信息
 exports.personUpdate = async (ctx) => {
 
-  const { id } = ctx.user;
+  const { user } = ctx;
+  const { nickName, password } = ctx.request.body;
 
-  const { password } = ctx.request.body;
+  user.nickName = nickName;
 
   if (password) {
-    ctx.request.body.passwordV = ctx.user.passwordV + 1;
-  }
+    user.password = password;
+    user.passwordV = user.passwordV + 1;
+  };
 
-  await User.update(ctx.request.body, { where: { id: id } });
-
-  const user = await User.findByPk(id);
-
-  ctx.user = user;
+  user.save();
 
   ctx.success();
 }
