@@ -23,26 +23,7 @@ exports.login = async (ctx) => {
     return ctx.fail('账户或密码不正确');
   }
 
-  const token = jwt.sign(
-    { userId: user.id },
-    tokenSecret,
-    { expiresIn: '2h' }
-  );
-
-  const refreshToken = jwt.sign(
-    { userId: user.id },
-    tokenSecret,
-    { expiresIn: '36h' }
-  );
-
-  const hour = 60 * 60;
-
-  const res = {
-    expire: 2 * hour,
-    token: token,
-    refreshExpire: 36 * hour,
-    refreshToken: refreshToken
-  };
+  const res = generateToken(user.id);
 
   ctx.success(res);
 }
@@ -50,32 +31,40 @@ exports.login = async (ctx) => {
 exports.refreshToken = async (ctx) => {
   try {
     const { userId } = jwt.verify(ctx.request.body.refreshToken, tokenSecret);
-  
-    const token = jwt.sign(
-      { userId: userId },
-      tokenSecret,
-      { expiresIn: '2h' }
-    );
-  
-    const refreshToken = jwt.sign(
-      { userId: userId },
-      tokenSecret,
-      { expiresIn: '36h' }
-    );
-  
-    const hour = 60 * 60;
-  
-    const res = {
-      expire: 2 * hour,
-      token: token,
-      refreshExpire: 36 * hour,
-      refreshToken: refreshToken
-    };
+
+    const res = generateToken(userId);
 
     ctx.success(res);
   } catch(err) {
     ctx.throw(401, err);
   }
+}
+
+function generateToken(userId) {
+  const tokenHour = 2;
+  const refreshTokenHour = 36;
+  const secondsOfHour = 60 * 60;
+
+  const token = jwt.sign(
+    { userId: userId },
+    tokenSecret,
+    { expiresIn: `${tokenHour}h` }
+  );
+
+  const refreshToken = jwt.sign(
+    { userId: userId },
+    tokenSecret,
+    { expiresIn: `${refreshTokenHour}h` }
+  );
+
+  const res = {
+    expire: tokenHour * secondsOfHour,
+    token: token,
+    refreshExpire: refreshTokenHour * secondsOfHour,
+    refreshToken: refreshToken
+  };
+
+  return res;
 }
 
 exports.getEps = async (ctx) => {
