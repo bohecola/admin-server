@@ -10,8 +10,6 @@ const pagination = (defaultOptions) => {
   return async (ctx, next) => {
     ctx.paginate = async (Model, options = {}) => {
       const { 
-        currentPage = defaultOptions.currentPage,
-        pageSize = defaultOptions.pageSize,
         keywords,
         likeField = [],
         exclude = [],
@@ -19,6 +17,9 @@ const pagination = (defaultOptions) => {
         associations = [],
         order = [['createdAt', 'DESC']]
       } = options;
+
+      const currentPage = Number(options.currentPage) || defaultOptions.currentPage;
+      const pageSize = Number(options.pageSize) || defaultOptions.pageSize;
 
       const query = {
         offset: (currentPage - 1) * pageSize,
