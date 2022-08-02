@@ -20,7 +20,7 @@ exports.add = async (ctx) => {
 
 exports.delete = async (ctx) => {
 
-  const { id } = ctx.request.body;
+  const [ id ] = ctx.request.body.ids;
 
   const menu = await Menu.findByPk(id);
 
