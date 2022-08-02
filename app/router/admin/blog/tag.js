@@ -9,7 +9,7 @@ router
   .post('/delete', tagController.delete)
   .post('/update', tagController.update)
   .get('/info', tagController.info)
-  .get('/list', tagController.list)
-  .get('/page', tagController.page);
+  .post('/list', tagController.list)
+  .post('/page', tagController.page);
 
 module.exports = router;

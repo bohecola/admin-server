@@ -3,8 +3,8 @@ const { Op } = require('sequelize');
 const pagination = (defaultOptions) => {
 
   defaultOptions = {
-    currentPage: 1,
-    pageSize: 10
+    page: 1,
+    size: 10
   };
 
   return async (ctx, next) => {
@@ -18,12 +18,12 @@ const pagination = (defaultOptions) => {
         order = [['createdAt', 'DESC']]
       } = options;
 
-      const currentPage = Number(options.currentPage) || defaultOptions.currentPage;
-      const pageSize = Number(options.pageSize) || defaultOptions.pageSize;
+      const page = Number(options.page) || defaultOptions.page;
+      const size = Number(options.size) || defaultOptions.size;
 
       const query = {
-        offset: (currentPage - 1) * pageSize,
-        limit: ~~pageSize,
+        offset: (page - 1) * size,
+        limit: ~~size,
         order: order,
         distinct: true
       };
@@ -59,8 +59,8 @@ const pagination = (defaultOptions) => {
       const data = {
         list: rows,
         pagination: {
-          page: currentPage,
-          size: pageSize,
+          page: page,
+          size: size,
           total: count
         }
       };

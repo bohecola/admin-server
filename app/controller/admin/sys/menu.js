@@ -96,11 +96,11 @@ exports.list = async (ctx) => {
 
 exports.page = async (ctx) => {
 
-  const { currentPage, pageSize, keywords } = ctx.query;
+  const { page, size, keywords } = ctx.request.body;
 
   const res = await ctx.paginate(Menu, {
-    currentPage: currentPage,
-    pageSize: pageSize,
+    page: page,
+    size: size,
     keywords: keywords,
     likeField: ['name']
   });

@@ -71,7 +71,7 @@ exports.info = async (ctx) => {
 
 exports.list = async (ctx) => {
   
-  const { keywords } = ctx.query;
+  const { keywords } = ctx.request.body;
 
   const users = await User.findAll({
     attributes: { exclude: 'password' },
@@ -99,11 +99,11 @@ exports.list = async (ctx) => {
 
 exports.page = async (ctx) => {
 
-  const { currentPage, pageSize, keywords } = ctx.query;
+  const { page, size, keywords } = ctx.request.body;
 
   const res = await ctx.paginate(User, {
-    currentPage: currentPage,
-    pageSize: pageSize,
+    page: page,
+    size: size,
     keywords: keywords,
     likeField: ['username', 'name'],
     exclude: ['password'],

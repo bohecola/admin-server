@@ -68,7 +68,7 @@ exports.info = async (ctx) => {
 
 exports.list = async (ctx) => {
 
-  const { keywords } = ctx.query;
+  const { keywords } = ctx.request.body;
 
   const articles = await Article.findAll({
     where: {
@@ -82,11 +82,11 @@ exports.list = async (ctx) => {
 
 exports.page = async (ctx) => {
 
-  const { currentPage, pageSize, keywords } = ctx.query;
+  const { page, size, keywords } = ctx.request.body;
 
   const res = await ctx.paginate(Article, {
-    currentPage: currentPage,
-    pageSize: pageSize,
+    page: page,
+    size: size,
     keywords: keywords,
     likeField: ['name'],
     exclude: ['categoryId'],

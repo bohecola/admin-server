@@ -9,7 +9,7 @@ router
   .post('/delete', userController.delete)
   .post('/update', userController.update)
   .get('/info', userController.info)
-  .get('/list', userController.list)
-  .get('/page', userController.page);
+  .post('/list', userController.list)
+  .post('/page', userController.page);
 
 module.exports = router;

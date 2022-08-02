@@ -61,7 +61,7 @@ exports.info = async (ctx) => {
 
 exports.list = async (ctx) => {
 
-  const { keywords } = ctx.query;
+  const { keywords } = ctx.request.body;
 
   const tags = await Tag.findAll({
     where: {
@@ -75,11 +75,11 @@ exports.list = async (ctx) => {
 
 exports.page = async (ctx) => {
 
-  const { currentPage, pageSize, keywords } = ctx.query;
+  const { page, size, keywords } = ctx.request.body;
 
   const res = await ctx.paginate(Tag, {
-    currentPage: currentPage,
-    pageSize: pageSize,
+    page: page,
+    size: size,
     keywords: keywords,
     likeField: ['name']
   });
