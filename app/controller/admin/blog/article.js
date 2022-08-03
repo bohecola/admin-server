@@ -17,9 +17,9 @@ exports.add = async (ctx) => {
 
 exports.delete = async (ctx) => {
 
-  const { id } = ctx.request.body;
+  const { ids } = ctx.request.body;
 
-  const res = await Article.destroy({ where: { id: id } });
+  const res = await Article.destroy({ where: { id: ids } });
 
   !res && ctx.throw(404, '文章不存在');
 

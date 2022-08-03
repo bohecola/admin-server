@@ -17,9 +17,9 @@ exports.add = async (ctx) => {
 
 exports.delete = async (ctx) => {
 
-  const [ id ] = ctx.request.body.ids;
+  const { ids } = ctx.request.body;
 
-  const res = await Role.destroy({ where: { id: id } });
+  const res = await Role.destroy({ where: { id: ids } });
 
   !res && ctx.throw(404, '角色不存在');
 
