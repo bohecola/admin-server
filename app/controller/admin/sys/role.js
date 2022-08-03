@@ -66,13 +66,13 @@ exports.info = async (ctx) => {
 
 exports.list = async (ctx) => {
 
-  const { keywords } = ctx.request.body;
+  const { keyWord } = ctx.request.body;
 
   const roles = await Role.findAll({
     where: {
       [Op.or]: [
-        { name: { [Op.like]: `%${keywords || ''}%` } },
-        { label: { [Op.like]: `%${keywords || ''}%` } }
+        { name: { [Op.like]: `%${keyWord || ''}%` } },
+        { label: { [Op.like]: `%${keyWord || ''}%` } }
       ]
     },
     order: [['createdAt', 'DESC']]
@@ -83,12 +83,12 @@ exports.list = async (ctx) => {
 
 exports.page = async (ctx) => {
 
-  const { page, size, keywords } = ctx.request.body;
+  const { page, size, keyWord } = ctx.request.body;
 
   const res = await ctx.paginate(Role, {
     page: page,
     size: size,
-    keywords: keywords,
+    keyWord: keyWord,
     likeField: ['name', 'label']
   });
 

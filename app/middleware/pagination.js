@@ -10,7 +10,7 @@ const pagination = (defaultOptions) => {
   return async (ctx, next) => {
     ctx.paginate = async (Model, options = {}) => {
       const { 
-        keywords,
+        keyWord,
         likeField = [],
         exclude = [],
         filter = {},
@@ -38,7 +38,7 @@ const pagination = (defaultOptions) => {
       if (likeField.length) {
         const obj = {
           where: {
-            [Op.or]: likeField.map(field => ({[field]: {[Op.like]: `%${keywords || ''}%`}})),
+            [Op.or]: likeField.map(field => ({[field]: {[Op.like]: `%${keyWord || ''}%`}})),
             ...filter
           }
         };
