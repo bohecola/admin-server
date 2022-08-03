@@ -1,6 +1,5 @@
 exports.userValidator = {
-  username: 'string',
-  password: { type: 'password', required: false },
+  username: 'string'
 };
 
 exports.roleValidator = {

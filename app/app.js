@@ -79,18 +79,18 @@ app
       { name: '用户列表', type: 1, router: '/sys/user', icon: 'UserFilled', viewPath: 'modules/base/views/user.vue', keepAlive: 1, parentId: 1 },
       { name: '角色列表', type: 1, router: '/sys/role', icon: 'Avatar', viewPath: 'modules/base/views/role.vue', keepAlive: 1, parentId: 1 },
       { name: '菜单列表', type: 1, router: '/sys/menu', icon: 'Menu', viewPath: 'modules/base/views/menu.vue', keepAlive: 1, parentId: 1 },
-      { name: '新增', type: 2,  perms: 'sys:user:add', parentId: 2 },
-      { name: '删除', type: 2,  perms: 'sys:user:delete', parentId: 2 },
-      { name: '修改', type: 2,  perms: 'sys:user:update', parentId: 2 },
-      { name: '查询', type: 2,  perms: 'sys:user:page,sys:user:list,sys:user:info', parentId: 2 },
-      { name: '新增', type: 2,  perms: 'sys:role:add', parentId: 3 },
-      { name: '删除', type: 2,  perms: 'sys:role:delete', parentId: 3 },
-      { name: '修改', type: 2,  perms: 'sys:role:update', parentId: 3 },
-      { name: '查询', type: 2,  perms: 'sys:role:page,sys:role:list,sys:role:info', parentId: 3 },
-      { name: '新增', type: 2,  perms: 'sys:menu:add', parentId: 4 },
-      { name: '删除', type: 2,  perms: 'sys:menu:delete', parentId: 4 },
-      { name: '修改', type: 2,  perms: 'sys:menu:update', parentId: 4 },
-      { name: '查询', type: 2,  perms: 'sys:menu:page,sys:menu:list,sys:menu:info', parentId: 4 }
+      // { name: '新增', type: 2,  perms: 'sys:user:add', parentId: 2 },
+      // { name: '删除', type: 2,  perms: 'sys:user:delete', parentId: 2 },
+      // { name: '修改', type: 2,  perms: 'sys:user:update', parentId: 2 },
+      // { name: '查询', type: 2,  perms: 'sys:user:page,sys:user:list,sys:user:info', parentId: 2 },
+      // { name: '新增', type: 2,  perms: 'sys:role:add', parentId: 3 },
+      // { name: '删除', type: 2,  perms: 'sys:role:delete', parentId: 3 },
+      // { name: '修改', type: 2,  perms: 'sys:role:update', parentId: 3 },
+      // { name: '查询', type: 2,  perms: 'sys:role:page,sys:role:list,sys:role:info', parentId: 3 },
+      // { name: '新增', type: 2,  perms: 'sys:menu:add', parentId: 4 },
+      // { name: '删除', type: 2,  perms: 'sys:menu:delete', parentId: 4 },
+      // { name: '修改', type: 2,  perms: 'sys:menu:update', parentId: 4 },
+      // { name: '查询', type: 2,  perms: 'sys:menu:page,sys:menu:list,sys:menu:info', parentId: 4 }
     ]);
 
     const roles = await Role.findAll();

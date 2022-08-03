@@ -9,7 +9,6 @@ exports.login = async (ctx) => {
 
   ctx.verifyParams({
     username: 'string',
-    password: 'password'
   });
 
   const { username, password } = ctx.request.body;
