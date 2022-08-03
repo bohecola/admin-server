@@ -105,10 +105,13 @@ app
     const users = await User.findAll();
     if (!users.length) {
       const initialUsers = await User.bulkCreate([
-        { username: 'bohecola', password: '123456', nickName: 'bohecola', email: 'bohecola@outlook.com', roleIdList: [1, 2] },
-        { username: 'bohe', password: '123456', nickName: 'bohe', email: 'bohecola@outlook.com', roleIdList: [1, 2] }
+        { username: 'bohecola', password: '123456', name: '薄荷可乐', nickName: '薄荷可乐', email: 'bohecola@outlook.com' },
+        { username: 'xiaoqing', password: '123456', name: '小青', nickName: '小青' },
+        { username: 'xiaolv', password: '123456', name: '小绿', nickName: '小绿' },
+        { username: 'xiaohei', password: '123456', name: '小黑', nickName: '小黑' },
+        { username: 'xiaobai', password: '123456', name: '小白', nickName: '小白' },
       ]);
-      await Promise.all(initialUsers.map(user => user.addRoles([1, 2])));
+      await Promise.all(initialUsers.map(user => user.addRoles(user.id === 1 ? [1, 2] : [2])));
     }
 
     const articles = await Article.findAll();

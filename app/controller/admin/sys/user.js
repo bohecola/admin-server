@@ -42,7 +42,7 @@ exports.update = async (ctx) => {
 
   await User.update(ctx.request.body, { where: { id: id } });
 
-  await user.setRoles(roleIdList);
+  roleIdList && await user.setRoles(roleIdList);
 
   ctx.success();
 }

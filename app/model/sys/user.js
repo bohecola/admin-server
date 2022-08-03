@@ -51,6 +51,12 @@ const User = sequelize.define('user', {
   avatar: {
     type: DataTypes.STRING,
     comment: '用户头像'
+  },
+  status: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 1,
+    comment: '账户状态'
   }
 });
 
