@@ -73,7 +73,37 @@ exports.permmenu = async (ctx) => {
 
 // 文件上传
 exports.upload = async (ctx) => {
+  // 文件上传表单对象
+  const { files } = ctx.request;
 
+  // 文件上传表单 keys 集合
+  const formDataKeys = Object.keys(files);
+
+  // 域名
+  const domain = "http://localhost:3000";
+
+  // 文件访问路径
+  const createURL = (domain, filename) => {
+    return `${domain}/${ctx.relativeUploadDirPath}/${filename}`;
+  };
+
+  if (files !== undefined && formDataKeys.length) {
+    // 多文件上传
+    if (formDataKeys.length > 1) {
+      const urls = formDataKeys.reduce((prev, key) => {
+        prev.push(createURL(domain, files[key].newFilename));
+        return prev;
+      }, []);
+      ctx.success(urls);
+    } 
+    // 单文件上传
+    else {
+      const url = createURL(domain, files[formDataKeys[0]].newFilename)
+      ctx.success(url);
+    }
+  } else {
+    ctx.throw(400, { message: "请选择需要上传的文件" })
+  }
 }
 
 // 退出

@@ -1,5 +1,5 @@
 const Koa = require('koa');
-const bodyParser = require('koa-bodyparser');
+const koaBody = require("koa-body");
 const static = require('koa-static');
 const mount = require('koa-mount');
 const cors = require('@koa/cors');
@@ -10,6 +10,8 @@ const sequelize = require('./database');
 const auth = require('./middleware/auth');
 const responseBody = require('./middleware/response');
 const pagination = require('./middleware/pagination');
+const fs = require("fs");
+const dayjs = require("dayjs");
 
 const { User, Role, Menu, Article, Category, Tag } = require('./model');
 
@@ -57,14 +59,38 @@ app
   });
 
 app
+  // 静态资源访问
+  .use(mount('/public', static(path.join(__dirname, './public'))))
   // token认证
   .use(auth())
   // 请求体解析
-  .use(bodyParser())
+  .use(koaBody({
+    multipart: true,
+    formidable: {
+      uploadDir: path.join(__dirname, `public/upload/`), // 设置文件上传目录
+      keepExtensions: true,
+      hashAlgorithm: "sha1",
+      maxFieldsSize: 2 * 1024 * 1024,
+      onFileBegin: (name, file) => {
+        // 上传文件目录相对路径
+        const relativeUploadDirPath = `public/upload/${dayjs(new Date()).format("YYYYMMDD")}`;
+        // 全局上下文添加相对路径
+        app.context.relativeUploadDirPath = relativeUploadDirPath;
+        // 上传文件目录绝对路径
+        const uploadDirPath = path.join(
+          __dirname,
+          relativeUploadDirPath
+        );
+
+        if (!fs.existsSync(uploadDirPath)) fs.mkdirSync(uploadDirPath);
+        
+        // 文件路径
+        file.filepath = `${uploadDirPath}/${file.newFilename}`;
+      }
+    }
+  }))
   // 请求参数校验
   .use(parameter(app))
-  // 静态资源访问
-  .use(mount('/public', static(path.join(__dirname, './public'))))
   .use(router.routes())
   .use(router.allowedMethods());
 

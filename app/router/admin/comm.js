@@ -8,6 +8,6 @@ router
   .post('/personUpdate', commController.personUpdate)
   .get('/person', commController.person)
   .get('/permmenu', commController.permmenu)
-  .get('/upload', commController.upload);
+  .post('/upload', commController.upload);
 
 module.exports = router;
