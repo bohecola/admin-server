@@ -73,36 +73,38 @@ exports.permmenu = async (ctx) => {
 
 // 文件上传
 exports.upload = async (ctx) => {
-  // 文件上传表单对象
+  // 文件 key-value 对象
   const { files } = ctx.request;
 
-  // 文件上传表单 keys 集合
-  const formDataKeys = Object.keys(files);
-
-  // 域名
-  const domain = "http://localhost:3000";
-
   // 文件访问路径
-  const createURL = (domain, filename) => {
+  const createURL = (filename) => {
+    // 域名
+    const domain = "http://localhost:3000";
+    // 文件访问路径
     return `${domain}/${ctx.relativeUploadDirPath}/${filename}`;
   };
 
-  if (files !== undefined && formDataKeys.length) {
+  if (files !== undefined && files["file"]) {
+    // 地址数组或字符串
+    let res;
     // 多文件上传
-    if (formDataKeys.length > 1) {
-      const urls = formDataKeys.reduce((prev, key) => {
-        prev.push(createURL(domain, files[key].newFilename));
+    if (Array.isArray(files["file"])) {
+      // 文件地址数组
+      res = files["file"].reduce((prev, file) => {
+        prev.push(
+          createURL(file.newFilename)
+        );
         return prev;
       }, []);
-      ctx.success(urls);
     } 
     // 单文件上传
     else {
-      const url = createURL(domain, files[formDataKeys[0]].newFilename)
-      ctx.success(url);
+      // 文件地址
+      res = createURL(files["file"].newFilename);
     }
+    ctx.success(res);
   } else {
-    ctx.throw(400, { message: "请选择需要上传的文件" })
+    ctx.throw(400, { message: "请选择需要上传的文件" });
   }
 }
 
