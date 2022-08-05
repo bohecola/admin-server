@@ -52,7 +52,7 @@ exports.permmenu = async (ctx) => {
 
   // 获取所有角色的菜单集合
   const menus = roles.reduce((prev, role) => {
-    prev.push(...role.menus)
+    prev.push(...role.menus);
     return prev;
   }, []);
 

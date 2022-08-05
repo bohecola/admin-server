@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const db = require('../conf/db');
+const db = require('../config/db');
 
 const sequelize = new Sequelize(db.database, db.username, db.password, {
   dialect: 'mysql',

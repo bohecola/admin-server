@@ -1,6 +1,6 @@
 const { User } = require('../../model');
 const jwt = require('jsonwebtoken');
-const { tokenSecret } = require('../../conf/secret');
+const { tokenSecret } = require('../../config/secret');
 const { passwordEncryption } = require('../../utils/crypto');
 const { readdirSync, statSync } = require('fs');
 const path = require('path');

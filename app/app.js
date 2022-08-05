@@ -12,6 +12,7 @@ const responseBody = require('./middleware/response');
 const pagination = require('./middleware/pagination');
 const fs = require("fs");
 const dayjs = require("dayjs");
+const { domain, port } = require("./config");
 
 const { User, Role, Menu, Article, Category, Tag } = require('./model');
 
@@ -176,8 +177,8 @@ app
     }
     console.log('Connection has been established successfully');
 
-    app.listen(3000, () => {
-      console.log('http://localhost:3000');
+    app.listen(port, () => {
+      console.log(`${domain}:${port}`);
     });
   } catch (error) {
     console.error('Unable to connect to the database:', error);
