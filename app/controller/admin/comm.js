@@ -16,8 +16,9 @@ exports.person = async (ctx) => {
 exports.personUpdate = async (ctx) => {
 
   const { user } = ctx;
-  const { nickName, password } = ctx.request.body;
+  const { avatar, nickName, password } = ctx.request.body;
 
+  user.avatar = avatar;
   user.nickName = nickName;
 
   if (password) {
