@@ -20,12 +20,9 @@ exports.menuValidator = {
 
 exports.articleValidator = {
   title: 'string',
-  content: { type: 'string', required: false },
   status: { type: 'boolean', required: false },
   // 目录id可以传null，这里不做限制（categoryId）
-  tagIdList: { type: 'array', required: false },
-  desc: { type: 'string', required: false },
-  slug: { type: 'string', required: false}
+  tagIdList: { type: 'array', required: false }
 }
 
 exports.categoryValidator = {

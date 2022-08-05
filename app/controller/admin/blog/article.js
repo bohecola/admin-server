@@ -88,7 +88,7 @@ exports.page = async (ctx) => {
     page: page,
     size: size,
     keyWord: keyWord,
-    likeField: ['name'],
+    likeField: ['title'],
     exclude: ['categoryId'],
     associations: [
       {
