@@ -99,12 +99,7 @@ exports.list = async (ctx) => {
 
 exports.page = async (ctx) => {
 
-  const { page, size, keyWord } = ctx.request.body;
-
   const res = await ctx.paginate(User, {
-    page: page,
-    size: size,
-    keyWord: keyWord,
     likeField: ['username', 'name'],
     exclude: ['password'],
     associations: [

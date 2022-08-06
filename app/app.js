@@ -21,13 +21,6 @@ Role.belongsToMany(Menu, { through: 'roles_menus' });
 // 自关联 菜单-菜单 一对多关系  （一个菜单可以添加多个子菜单），一个菜单可以有多个子级菜单，但同时一个菜单只能有一个父级菜单
 Menu.hasMany(Menu, { foreignKey: 'parentId' });
 
-User.hasMany(Article, { foreignKey: 'createdBy' });
-User.hasMany(Category, { foreignKey: 'createdBy' });
-User.hasMany(Tag, { foreignKey: 'createdBy' });
-User.hasMany(Article, { foreignKey: 'updatedBy' });
-User.hasMany(Category, { foreignKey: 'updatedBy' });
-User.hasMany(Tag, { foreignKey: 'updatedBy' });
-
 // 文章-标签 多对多关系 （一个文章可以添加多个标签）
 Article.belongsToMany(Tag, { through: 'articles_tags' });
 // 标签-文章 多对多关系 （一个标签可以添加多个文章）
@@ -37,15 +30,16 @@ Tag.belongsToMany(Article, { through: 'articles_tags' });
 Category.hasMany(Article);
 Article.belongsTo(Category);
 
+User.hasMany(Article, { foreignKey: 'createdBy' });
+User.hasMany(Category, { foreignKey: 'createdBy' });
+User.hasMany(Tag, { foreignKey: 'createdBy' });
+User.hasMany(Article, { foreignKey: 'updatedBy' });
+User.hasMany(Category, { foreignKey: 'updatedBy' });
+User.hasMany(Tag, { foreignKey: 'updatedBy' });
+
 const app = new Koa();
 
 app
-  // 跨域
-  .use(cors())
-  // 挂载返回统一格式数据方法
-  .use(responseBody())
-  // 挂载分页方法
-  .use(pagination())
   // 外层异常捕获中间件
   .use(async (ctx, next) => {
     try {
@@ -55,7 +49,10 @@ app
       ctx.status = err.statusCode || err.status || 500;
       ctx.error(err);
     }
-  });
+  })
+  // 跨域
+  .use(cors())
+
 
 app
   // 静态资源访问
@@ -66,6 +63,10 @@ app
   .use(koaBody(app))
   // 请求参数校验
   .use(parameter(app))
+  // 挂载分页方法
+  .use(pagination())
+  // 挂载返回统一格式数据方法
+  .use(responseBody())
   .use(router.routes())
   .use(router.allowedMethods());
 

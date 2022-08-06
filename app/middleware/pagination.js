@@ -8,53 +8,47 @@ const pagination = (defaultOptions) => {
   };
 
   return async (ctx, next) => {
+
     ctx.paginate = async (Model, options = {}) => {
       const { 
-        keyWord,
         likeField = [],
         exclude = [],
         filter = {},
         associations = [],
-        order = [['createdAt', 'DESC']]
       } = options;
 
-      const page = Number(options.page) || defaultOptions.page;
-      const size = Number(options.size) || defaultOptions.size;
+      const { keyWord, prop, order } = ctx.request.body;
 
-      const query = {
+      const page = Number(ctx.request.body.page || options.page || defaultOptions.page);
+      const size = Number(ctx.request.body.size || options.size || defaultOptions.page);
+
+      const { count, rows } = await Model.findAndCountAll({
+        // 忽略的属性
+        attributes: { exclude: exclude || [] },
+        // 关联查询
+        include: associations || [],
+        // 偏移量
         offset: (page - 1) * size,
-        limit: ~~size,
-        order: order,
-        distinct: true
-      };
-
-      if (exclude.length) {
-        const obj = {
-          attributes: { exclude: exclude }
-        };
-        Object.assign(query, obj);
-      }
-
-      if (likeField.length) {
-        const obj = {
-          where: {
-            [Op.or]: likeField.map(field => ({[field]: {[Op.like]: `%${keyWord || ''}%`}})),
-            ...filter
-          }
-        };
-
-        Object.assign(query, obj);
-      }
-
-      if (associations.length) {
-        const obj = {
-          include: associations
-        };
-
-        Object.assign(query, obj);
-      }
-
-      const { count, rows } = await Model.findAndCountAll(query);
+        // 限制数量
+        limit: size,
+        // 排序规则
+        order: [[prop || "updatedAt", order?.toUpperCase() || "DESC"]],
+        // 去除重复计算
+        distinct: true,
+        // WHERE子句
+        where: {
+          // 模糊查询
+          [Op.or]: likeField?.map(field => ({[field]: {[Op.like]: `%${keyWord || ''}%`}})),
+          // KEY: VUELE查询
+          ...(
+            Object.fromEntries(
+              Object.entries(filter)
+                .filter(([_, v]) => {
+                  return v != null && v !== "";
+                }))
+            )
+        }
+      });
 
       const data = {
         list: rows,

@@ -29,7 +29,7 @@ const Article = sequelize.define('article', {
     comment: 'URL-Slug'
   },
   status: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: 1,
     comment: '文章状态'

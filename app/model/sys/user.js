@@ -53,7 +53,7 @@ const User = sequelize.define('user', {
     comment: '用户头像'
   },
   status: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: 1,
     comment: '账户状态'

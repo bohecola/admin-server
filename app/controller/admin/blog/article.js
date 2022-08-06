@@ -82,14 +82,15 @@ exports.list = async (ctx) => {
 
 exports.page = async (ctx) => {
 
-  const { page, size, keyWord } = ctx.request.body;
+  const { categoryId, status } = ctx.request.body;
 
   const res = await ctx.paginate(Article, {
-    page: page,
-    size: size,
-    keyWord: keyWord,
     likeField: ['title'],
     exclude: ['categoryId'],
+    filter: {
+      categoryId: categoryId,
+      status: status
+    },
     associations: [
       {
         association: 'category',
@@ -104,10 +105,10 @@ exports.page = async (ctx) => {
   });
 
   res.list.forEach(article => {
-    article.setDataValue('categoryName', article.dataValues.category.name);
+    article.setDataValue('categoryName', article.category?.name || null);
     delete article.dataValues.category;
 
-    article.setDataValue('tagNames', article.dataValues.tags.map(tag => tag.name).join(','));
+    article.setDataValue('tagNames', article.tags.map(tag => tag.name).join(',') || null);
     delete article.dataValues.tags;
   });
 
