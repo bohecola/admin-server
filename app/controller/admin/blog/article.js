@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const Article = require('../../../model/blog/article');
+const { Article, Tag } = require('../../../model');
 const { articleValidator } = require('../../../validator');
 
 exports.add = async (ctx) => {
@@ -82,15 +82,33 @@ exports.list = async (ctx) => {
 
 exports.page = async (ctx) => {
 
-  const { categoryId, status } = ctx.request.body;
+  const { categoryId, tagIdList, status } = ctx.request.body;
+
+  // WHERE查询条件
+  const filter = {
+    categoryId: categoryId,
+    status: status
+  };
+
+  // 查询具有相关标签 id 的文档
+  if (tagIdList && tagIdList.length) {
+    // 去重
+    const unique = (arr) => Array.from(new Set(arr));
+
+    const tags = await Tag.findAll({ where: { id: tagIdList } });
+    const allArticles = await Promise.all(tags.map((tag) => tag.getArticles()));
+    const allUniqueArticles = Array.prototype.flat.call(allArticles);
+    const ids = unique(allUniqueArticles.map((article) => article.id));
+
+    if (ids.length) {
+      Object.assign(filter, { id: ids });
+    }
+  }
 
   const res = await ctx.paginate(Article, {
     likeField: ['title'],
-    exclude: ['categoryId'],
-    filter: {
-      categoryId: categoryId,
-      status: status
-    },
+    excludeAttributes: ['categoryId'],
+    filter,
     associations: [
       {
         association: 'category',

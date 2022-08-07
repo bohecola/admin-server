@@ -12,7 +12,7 @@ const pagination = (defaultOptions) => {
     ctx.paginate = async (Model, options = {}) => {
       const { 
         likeField = [],
-        exclude = [],
+        excludeAttributes = [],
         filter = {},
         associations = [],
       } = options;
@@ -24,8 +24,8 @@ const pagination = (defaultOptions) => {
 
       const { count, rows } = await Model.findAndCountAll({
         // 忽略的属性
-        attributes: { exclude: exclude || [] },
-        // 关联查询
+        attributes: { exclude: excludeAttributes || [] },
+        // 关联配置
         include: associations || [],
         // 偏移量
         offset: (page - 1) * size,
