@@ -32,7 +32,7 @@ const pagination = (defaultOptions) => {
         // 限制数量
         limit: size,
         // 排序规则
-        order: [[prop || "updatedAt", order?.toUpperCase() || "DESC"]],
+        order: [[prop || "createdAt", order?.toUpperCase() || "DESC"]],
         // 去除重复计算
         distinct: true,
         // WHERE子句

@@ -52,9 +52,8 @@ app
   })
   // 跨域
   .use(cors())
-
-
-app
+  // 挂载返回统一格式数据方法
+  .use(responseBody())
   // 静态资源访问
   .use(mount('/public', static(path.join(__dirname, './public'))))
   // token认证
@@ -65,8 +64,6 @@ app
   .use(parameter(app))
   // 挂载分页方法
   .use(pagination())
-  // 挂载返回统一格式数据方法
-  .use(responseBody())
   .use(router.routes())
   .use(router.allowedMethods());
 

@@ -22,6 +22,11 @@ exports.login = async (ctx) => {
     return ctx.fail('账户或密码不正确');
   }
 
+  // 账户被禁用
+  if (!user.status) {
+    return ctx.fail('账户已被禁用');
+  }
+
   const res = generateToken(user.id);
 
   ctx.success(res);
