@@ -1,4 +1,5 @@
 const Koa = require('koa');
+const session = require('koa-session');
 const static = require('koa-static');
 const mount = require('koa-mount');
 const cors = require('@koa/cors');
@@ -9,7 +10,9 @@ const auth = require('./middleware/auth');
 const koaBody = require('./middleware/koa-body');
 const responseBody = require('./middleware/response');
 const pagination = require('./middleware/pagination');
-const bootstrap = require("./bootstrap");
+const bootstrap = require('./bootstrap');
+const { sessionConfig } = require('./config');
+const { sessionSecret } = require('./config/secret');
 
 
 const { User, Role, Menu, Article, Category, Tag } = require('./model');
@@ -38,7 +41,7 @@ User.hasMany(Category, { foreignKey: 'updatedBy' });
 User.hasMany(Tag, { foreignKey: 'updatedBy' });
 
 const app = new Koa();
-
+app.keys = [sessionSecret];
 app
   // 外层异常捕获中间件
   .use(async (ctx, next) => {
@@ -50,8 +53,12 @@ app
       ctx.error(err);
     }
   })
+  // session
+  .use(session(sessionConfig, app))
   // 跨域
-  .use(cors())
+  .use(cors({
+    credentials: true
+  }))
   // 挂载返回统一格式数据方法
   .use(responseBody())
   // 静态资源访问

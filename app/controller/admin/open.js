@@ -1,17 +1,27 @@
 const { User } = require('../../model');
 const jwt = require('jsonwebtoken');
+const svgCaptcha = require('svg-captcha');
+const svgToMiniDataURI = require('mini-svg-data-uri');
 const { tokenSecret } = require('../../config/secret');
 const { passwordEncryption } = require('../../utils/crypto');
 const { readdirSync, statSync } = require('fs');
 const path = require('path');
 
+// 登录
 exports.login = async (ctx) => {
 
   ctx.verifyParams({
     username: 'string',
   });
 
-  const { username, password } = ctx.request.body;
+  const { username, password, verifyCode } = ctx.request.body;
+
+  console.log(typeof ctx.session.verifyCode, typeof verifyCode);
+  console.log(ctx.session.verifyCode, verifyCode, 2222222);
+
+  if (ctx.session.verifyCode !== verifyCode) {
+    return ctx.fail('验证码错误');
+  }
 
   const user = await User.findOne({ where: { username: username } });
 
@@ -32,6 +42,7 @@ exports.login = async (ctx) => {
   ctx.success(res);
 }
 
+// 刷新 token
 exports.refreshToken = async (ctx) => {
   try {
     const { userId } = jwt.verify(ctx.request.body.refreshToken, tokenSecret);
@@ -42,6 +53,42 @@ exports.refreshToken = async (ctx) => {
   } catch(err) {
     ctx.throw(401, err);
   }
+}
+
+// 验证码
+exports.captcha = async (ctx) => {
+  const { type = '', width = 150, height = 50 } = ctx.query;
+
+  const svg = svgCaptcha.create({
+    ignoreChars: 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM',
+    width: Number(width),
+    height: Number(height)
+  });
+  const result = {
+    data: svg.data.replace(/"/g, "'")
+  };
+  // 文字变白
+  const rpList = [
+    '#111',
+    '#222',
+    '#333',
+    '#444',
+    '#555',
+    '#666',
+    '#777',
+    '#888',
+    '#999',
+  ];
+  rpList.forEach(rp => {
+    result.data = result.data['replaceAll'](rp, '#fff');
+  });
+  if (type === 'base64') {
+    result.data = svgToMiniDataURI(result.data);
+  }
+  // 添加 session
+  ctx.session.verifyCode = svg.text.toLowerCase();
+  console.log(ctx.session.verifyCode, 1111111);
+  ctx.success(result);
 }
 
 function generateToken(userId) {
