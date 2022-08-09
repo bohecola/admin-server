@@ -28,7 +28,7 @@ exports.clearJunkFiles = async (ctx) => {
   const avatarURL = users.map(user => user.avatar);
 
   // 所有博客内容数组
-  const allArticleContent = articles.map(article => article.content);
+  const allArticleContent = articles.map(article => article.content).filter(Boolean);
 
   const getDomStrSrcURLArr = (s) => {
     // 匹配 img video source 标签
@@ -37,12 +37,22 @@ exports.clearJunkFiles = async (ctx) => {
     const srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/gi;
     // 得到所有 img video source标签
     const tagsArr = s.match(tagReg);
-    // 得到所有标签的 src=""
-    const srcArr = tagsArr.map((tagStr) => tagStr.match(srcReg)[0]);
-    // 得到链接数组
-    const urlArr = srcArr.map(src => src.replace("src=\"", "").replace("\"", ""));
+    // 得到所有标签的 src="" 标签匹配结果为 null 直接返回空数组
+    const srcArr = !tagsArr ? [] : tagsArr.map((tagStr) => tagStr.match(srcReg)[0]);
+    // 得到 dom 字符串中的链接数组
+    const domURLArr = srcArr.map(src => src.replace("src=\"", "").replace("\"", ""));
+
+    // 匹配 markdown 字符串中的连接
+    const mdURLReg = /\(http.*?(?:\))/gi;
+    // 得到 markdown 文本中的 (http...) 
+    const mdImgArr = s.match(mdURLReg);
+    // 得到 md 字符串中的连接数组
+    const mdURLArr = !mdImgArr ? [] : mdImgArr.map(src => src.replace("(", "").replace(")", ""));
     // 返回
-    return urlArr;
+    return [
+      ...domURLArr,
+      ...mdURLArr
+    ];
   };
 
   // 博客中引用的文件链接地址

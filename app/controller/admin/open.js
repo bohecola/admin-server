@@ -20,7 +20,7 @@ exports.login = async (ctx) => {
   console.log(ctx.session.verifyCode, verifyCode, 2222222);
 
   if (ctx.session.verifyCode !== verifyCode) {
-    return ctx.fail('验证码错误');
+    return ctx.fail('验证码不正确');
   }
 
   const user = await User.findOne({ where: { username: username } });

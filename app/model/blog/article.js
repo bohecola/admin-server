@@ -17,6 +17,7 @@ const Article = sequelize.define('article', {
   },
   content: {
     type: DataTypes.TEXT,
+    defaultValue: "",
     comment: '文章内容'
   },
   desc: {

@@ -53,12 +53,12 @@ app
       ctx.error(err);
     }
   })
-  // session
-  .use(session(sessionConfig, app))
   // 跨域
   .use(cors({
     credentials: true
   }))
+  // session
+  .use(session(sessionConfig, app))
   // 挂载返回统一格式数据方法
   .use(responseBody())
   // 静态资源访问
