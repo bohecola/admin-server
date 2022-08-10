@@ -5,9 +5,11 @@ const postsController = require('../../controller/posts');
 
 router
   .prefix('/posts')
-  .get('/pages', postsController.pages)
-  .get('/info/:slug', postsController.info)
+  .post('/page', postsController.page)
+  .get('/info', postsController.info)
   .get('/tags', postsController.tags)
   .get('/categories', postsController.categories)
+  .get('/records', postsController.records)
+  .get('/profile', postsController.profile);
 
 module.exports = router;

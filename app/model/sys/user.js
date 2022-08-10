@@ -44,6 +44,10 @@ const User = sequelize.define('user', {
     type: DataTypes.STRING,
     comment: '用户邮箱'
   },
+  phone: {
+    type: DataTypes.STRING,
+    comment: '手机号码'
+  },
   desc: {
     type: DataTypes.STRING,
     comment: '用户描述'

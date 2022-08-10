@@ -12,7 +12,7 @@ const sequelize = new Sequelize(db.database, db.username, db.password, {
   dialectOptions: {
     dateStrings: true,
     typeCast: true
-  }
+  },
 });
 
 module.exports = sequelize;

@@ -102,7 +102,7 @@ exports.page = async (ctx) => {
   const res = await ctx.paginate(User, {
     likeField: ['username', 'name'],
     excludeAttributes: ['password'],
-    associations: [
+    include: [
       {
         association: 'roles',
         attributes: ['name'],

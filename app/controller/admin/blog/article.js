@@ -92,13 +92,28 @@ exports.page = async (ctx) => {
 
   // 查询具有相关标签 id 的文档
   if (tagIdList && tagIdList.length) {
-    // 去重
-    const unique = (arr) => Array.from(new Set(arr));
-
+    // 找到所有标签
     const tags = await Tag.findAll({ where: { id: tagIdList } });
-    const allArticles = await Promise.all(tags.map((tag) => tag.getArticles()));
-    const allUniqueArticles = Array.prototype.flat.call(allArticles);
-    const ids = unique(allUniqueArticles.map((article) => article.id));
+    // 每个标签对应的文章集合
+    const allTagArticles = await Promise.all(tags.map((tag) => tag.getArticles()))
+    
+    // 每个标签对应的文章id集合 二维数组
+    const allTagArticlesIds = allTagArticles.reduce((prev, articles) => {
+      prev.push(articles.map((article) => article.id));
+      return prev;
+    }, []);
+
+    // 得到这些标签对应的文章集合的交集，即同时包含这些标签的文章集合
+    const ids = allTagArticlesIds.reduce((prev, articleIds, index) => {
+      if (index === 0) {
+        // 第一个文章id集合赋值给prev
+        prev = articleIds;
+        return prev;
+      }
+      // prev 和后面的集合求交集
+      prev = prev.filter(id => articleIds.includes(id));
+      return prev;
+    }, []);
 
     if (ids.length) {
       Object.assign(filter, { id: ids });
@@ -107,9 +122,9 @@ exports.page = async (ctx) => {
 
   const res = await ctx.paginate(Article, {
     likeField: ['title'],
-    excludeAttributes: ['categoryId'],
+    excludeAttributes: ['categoryId', 'content'],
     filter,
-    associations: [
+    include: [
       {
         association: 'category',
         attributes: ['name']
