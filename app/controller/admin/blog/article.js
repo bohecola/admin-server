@@ -122,7 +122,7 @@ exports.page = async (ctx) => {
 
   const res = await ctx.paginate(Article, {
     likeField: ['title'],
-    excludeAttributes: ['categoryId', 'content'],
+    excludeAttributes: ['categoryId', 'content', 'createdBy', 'updatedBy'],
     filter,
     include: [
       {
