@@ -1,4 +1,5 @@
 const { User } = require("../../model");
+const config = require('../../config');
 
 // 个人信息
 exports.person = async (ctx) => {
@@ -80,7 +81,7 @@ exports.upload = async (ctx) => {
   // 文件访问路径
   const createURL = (filename) => {
     // 域名
-    const domain = "http://localhost:3000";
+    const domain = config.domain;
     // 文件访问路径
     return `${domain}/${ctx.relativeUploadDirPath}/${filename}`;
   };

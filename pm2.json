@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "admin-demo-api",
+      "name": "admin-server-api",
       "script": "./app/app.js",
       "cwd": "./",
       "watch": true,
