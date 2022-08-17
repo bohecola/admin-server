@@ -13,7 +13,7 @@ const pagination = require('./middleware/pagination');
 const bootstrap = require('./bootstrap');
 const { sessionConfig } = require('./config');
 const { sessionSecret } = require('./config/secret');
-
+// const sslify = require('koa-sslify').default; // http 强制 https
 
 const { User, Role, Menu, Article, Category, Tag } = require('./model');
 
@@ -53,6 +53,8 @@ app
       ctx.error(err);
     }
   })
+  // https
+  // .use(sslify())
   // 跨域
   .use(cors({
     credentials: true

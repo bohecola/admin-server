@@ -12,6 +12,11 @@ const Tag = sequelize.define('tag', {
     type: DataTypes.STRING,
     allowNull: false,
     comment: '标签名称'
+  },
+  slug: {
+    type: DataTypes.STRING,
+    unique: true,
+    comment: "标签URL-Slug"
   }
 });
 

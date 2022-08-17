@@ -14,6 +14,11 @@ const Category = sequelize.define('category', {
     allowNull: false,
     unique: true,
     comment: '目录名称'
+  },
+  slug: {
+    type: DataTypes.STRING,
+    unique: true,
+    comment: "目录URL-Slug"
   }
 });
 

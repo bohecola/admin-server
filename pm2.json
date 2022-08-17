@@ -1,0 +1,24 @@
+{
+  "apps": [
+    {
+      "name": "admin-demo-api",
+      "script": "./app/app.js",
+      "cwd": "./",
+      "watch": true,
+      "ignore_watch": [
+        "node_modules",
+        "logs"
+      ],
+      "merge_logs": true,
+      "instances": 0,
+      "exec_mode": "cluster",
+      "error_file": "./logs/err.log",
+      "out_file": "./logs/out.log",
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "env": {
+        "NODE_ENV": "production",
+        "PORT": 3000
+      }
+    }
+  ]
+}
