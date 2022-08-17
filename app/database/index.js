@@ -13,6 +13,7 @@ const sequelize = new Sequelize(db.database, db.username, db.password, {
     dateStrings: true,
     typeCast: true
   },
+  logging: false
 });
 
 module.exports = sequelize;

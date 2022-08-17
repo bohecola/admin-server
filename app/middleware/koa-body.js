@@ -8,7 +8,7 @@ module.exports = (app) => {
   return koaBody({
     multipart: true,
     formidable: {
-      uploadDir: path.join(__dirname, `public/upload/`), // 设置文件上传目录
+      uploadDir: path.join(__dirname, `../public/upload/`), // 设置文件上传目录
       keepExtensions: true,
       hashAlgorithm: "sha1",
       maxFieldsSize: 2 * 1024 * 1024,

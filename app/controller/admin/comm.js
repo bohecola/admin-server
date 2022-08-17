@@ -82,8 +82,9 @@ exports.upload = async (ctx) => {
   const createURL = (filename) => {
     // 域名
     const domain = config.domain;
+    const port = config.port;
     // 文件访问路径
-    return `${domain}/${ctx.relativeUploadDirPath}/${filename}`;
+    return `${domain}:${port}/${ctx.relativeUploadDirPath}/${filename}`;
   };
 
   if (files !== undefined && files["file"]) {

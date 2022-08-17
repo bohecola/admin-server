@@ -16,8 +16,8 @@ exports.login = async (ctx) => {
 
   const { username, password, verifyCode } = ctx.request.body;
 
-  console.log(typeof ctx.session.verifyCode, typeof verifyCode);
-  console.log(ctx.session.verifyCode, verifyCode, 2222222);
+  console.log(typeof ctx.session.verifyCode, typeof verifyCode, '登录时类型');
+  console.log(ctx.session.verifyCode, verifyCode, '验证码登录时交验');
 
   if (ctx.session.verifyCode !== verifyCode) {
     return ctx.fail('验证码不正确');
@@ -80,14 +80,14 @@ exports.captcha = async (ctx) => {
     '#999',
   ];
   rpList.forEach(rp => {
-    result.data = result.data['replaceAll'](rp, '#fff');
+    result.data = result.data['replace'](new RegExp(rp, 'g'), '#fff');
   });
   if (type === 'base64') {
     result.data = svgToMiniDataURI(result.data);
   }
   // 添加 session
   ctx.session.verifyCode = svg.text.toLowerCase();
-  console.log(ctx.session.verifyCode, 1111111);
+  console.log(ctx.session.verifyCode, '验证码生成时, 添加到session中');
   ctx.success(result);
 }
 
