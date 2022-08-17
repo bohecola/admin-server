@@ -159,8 +159,8 @@ exports.records = async (ctx) => {
     attributes: [
       'id',
       'slug',
-      [sequelize.fn('any_value', sequelize.col('title')), 'title'],
-      [sequelize.fn('any_value', sequelize.col('desc')), 'desc'],
+      'title',
+      'desc',
       [sequelize.fn('date_format', sequelize.col('createdAt'), '%Y'), 'year'],
       [sequelize.fn('date_format', sequelize.col('createdAt'), '%Y-%m-%d'), 'day'],
       'createdAt'
