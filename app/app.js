@@ -13,7 +13,6 @@ const pagination = require('./middleware/pagination');
 const bootstrap = require('./bootstrap');
 const { sessionConfig } = require('./config');
 const { sessionSecret } = require('./config/secret');
-// const sslify = require('koa-sslify').default; // http 强制 https
 
 const { User, Role, Menu, Article, Category, Tag } = require('./model');
 
@@ -53,8 +52,6 @@ app
       ctx.error(err);
     }
   })
-  // https
-  // .use(sslify())
   // 跨域
   .use(cors({
     credentials: true
@@ -65,24 +62,16 @@ app
   .use(responseBody())
   // token认证
   .use(auth())
-  .use(async (ctx, next) => {
-    console.log(11111111);
-    await next();
-  })
+  // 静态资源访问
+  .use(mount('/public', static(path.join(__dirname, './public'))))
   // 请求体解析
   .use(koaBody(app))
-  .use(async (ctx, next) => {
-    console.log(22222222);
-    await next();
-  })
   // 请求参数校验
   .use(parameter(app))
   // 挂载分页方法
   .use(pagination())
   .use(router.routes())
-  .use(router.allowedMethods())
-  // 静态资源访问
-  .use(mount('/public', static(path.join(__dirname, './public'))));
+  .use(router.allowedMethods());
 
 app.on('error', (err, ctx) => {
   console.log(333333333);
