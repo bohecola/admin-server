@@ -10,8 +10,8 @@ module.exports = (app) => {
     formidable: {
       uploadDir: path.join(__dirname, `../public/upload/`), // 设置文件上传目录
       keepExtensions: true,
-      hashAlgorithm: "sha1",
       maxFieldsSize: 2 * 1024 * 1024,
+      hashAlgorithm: 'sha1',
       onFileBegin: (name, file) => {
         // 上传文件目录相对路径
         const relativeUploadDirPath = `public/upload/${dayjs(new Date()).format("YYYYMMDD")}`;

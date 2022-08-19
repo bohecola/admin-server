@@ -63,18 +63,31 @@ app
   .use(session(sessionConfig, app))
   // 挂载返回统一格式数据方法
   .use(responseBody())
-  // 静态资源访问
-  .use(mount('/public', static(path.join(__dirname, './public'))))
   // token认证
   .use(auth())
+  .use(async (ctx, next) => {
+    console.log(11111111);
+    await next();
+  })
   // 请求体解析
   .use(koaBody(app))
+  .use(async (ctx, next) => {
+    console.log(22222222);
+    await next();
+  })
   // 请求参数校验
   .use(parameter(app))
   // 挂载分页方法
   .use(pagination())
   .use(router.routes())
-  .use(router.allowedMethods());
+  .use(router.allowedMethods())
+  // 静态资源访问
+  .use(mount('/public', static(path.join(__dirname, './public'))));
+
+app.on('error', (err, ctx) => {
+  console.log(333333333);
+  console.log(err);
+});
 
 // 启动程序
 bootstrap(app);
