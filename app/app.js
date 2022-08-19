@@ -3,11 +3,12 @@ const session = require('koa-session');
 const static = require('koa-static');
 const mount = require('koa-mount');
 const cors = require('@koa/cors');
+const bodyParser = require('koa-bodyparser');
 const parameter = require('koa-parameter');
 const path = require('path');
 const router = require('./router');
 const auth = require('./middleware/auth');
-const koaBody = require('./middleware/koa-body');
+const upload = require('./middleware/upload');
 const responseBody = require('./middleware/response');
 const pagination = require('./middleware/pagination');
 const bootstrap = require('./bootstrap');
@@ -65,7 +66,9 @@ app
   // token认证
   .use(auth())
   // 请求体解析
-  .use(koaBody(app))
+  .use(bodyParser())
+  // 文件上传
+  .use(upload(app))
   // 请求参数校验
   .use(parameter(app))
   // 挂载分页方法

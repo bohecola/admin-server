@@ -75,8 +75,18 @@ exports.permmenu = async (ctx) => {
 
 // 文件上传
 exports.upload = async (ctx) => {
-  // 文件 key-value 对象
-  const { files } = ctx.request;
+  // 文件 file 对象
+  // {
+  //   fieldname: 'file',
+  //   originalname: 'sai.jpeg',
+  //   encoding: '7bit',
+  //   mimetype: 'image/jpeg',
+  //   destination: '/Users/bohe/admin-server/app/public/upload/20220819',
+  //   filename: 'sai.jpeg',
+  //   path: '/Users/bohe/admin-server/app/public/upload/20220819/sai.jpeg',
+  //   size: 117641
+  // }
+  const { file } = ctx;
 
   // 文件访问路径
   const createURL = (filename) => {
@@ -84,28 +94,11 @@ exports.upload = async (ctx) => {
     const domain = config.domain;
     const port = config.port;
     // 文件访问路径
-    return `${domain}:${port}/${ctx.relativeUploadDirPath}/${filename}`;
+    return `${domain}:${port}/${ctx.dirPath}/${filename}`;
   };
 
-  if (files !== undefined && files["file"]) {
-    // 地址数组或字符串
-    let res;
-    // 多文件上传
-    if (Array.isArray(files["file"])) {
-      // 文件地址数组
-      res = files["file"].reduce((prev, file) => {
-        prev.push(
-          createURL(file.newFilename)
-        );
-        return prev;
-      }, []);
-    } 
-    // 单文件上传
-    else {
-      // 文件地址
-      res = createURL(files["file"].newFilename);
-    }
-    ctx.success(res);
+  if (file !== undefined && file) {
+    ctx.success(createURL(file.filename));
   } else {
     ctx.throw(400, { message: "请选择需要上传的文件" });
   }
