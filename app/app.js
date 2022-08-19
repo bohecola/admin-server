@@ -60,10 +60,10 @@ app
   .use(session(sessionConfig, app))
   // 挂载返回统一格式数据方法
   .use(responseBody())
-  // token认证
-  .use(auth())
   // 静态资源访问
   .use(mount('/public', static(path.join(__dirname, './public'))))
+  // token认证
+  .use(auth())
   // 请求体解析
   .use(koaBody(app))
   // 请求参数校验
@@ -72,11 +72,6 @@ app
   .use(pagination())
   .use(router.routes())
   .use(router.allowedMethods());
-
-app.on('error', (err, ctx) => {
-  console.log(333333333);
-  console.log(err);
-});
 
 // 启动程序
 bootstrap(app);
