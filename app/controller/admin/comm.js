@@ -1,5 +1,9 @@
 const { User } = require("../../model");
 const config = require('../../config');
+const path = require('path');
+const fs = require("fs");
+const dayjs = require("dayjs");
+const { v1: uuid } = require('uuid');
 
 // 个人信息
 exports.person = async (ctx) => {
@@ -75,30 +79,35 @@ exports.permmenu = async (ctx) => {
 
 // 文件上传
 exports.upload = async (ctx) => {
-  // 文件 file 对象
-  // {
-  //   fieldname: 'file',
-  //   originalname: 'sai.jpeg',
-  //   encoding: '7bit',
-  //   mimetype: 'image/jpeg',
-  //   destination: '/Users/bohe/admin-server/app/public/upload/20220819',
-  //   filename: 'sai.jpeg',
-  //   path: '/Users/bohe/admin-server/app/public/upload/20220819/sai.jpeg',
-  //   size: 117641
-  // }
-  const { file } = ctx;
-
-  // 文件访问路径
-  const createURL = (filename) => {
-    // 域名
-    const domain = config.domain;
-    const port = config.port;
-    // 文件访问路径
-    return `${domain}:${port}/${ctx.dirPath}/${filename}`;
-  };
-
+  // 文件
+  const file = ctx.files.file[0];
+  // 文件存在
   if (file !== undefined && file) {
-    ctx.success(createURL(file.filename));
+    // 目录相对路径
+    const dirPath = `public/upload/${dayjs(new Date()).format("YYYYMMDD")}`;
+    // 目录绝对路径
+    const absDirPath = path.join(
+      __dirname,
+      '../../',
+      dirPath
+    );
+    // 目录不存在，创建目录
+    if (!fs.existsSync(absDirPath)) fs.mkdirSync(absDirPath);
+    // 文件后缀
+    const [, ext] = file.originalname.split('.');
+    // 自定义文件名
+    const filename = uuid() + '.' + ext;
+    // 写入文件
+    fs.writeFileSync(`${absDirPath}/${filename}`, file.buffer);
+    // 文件访问路径
+    const createURL = (n) => {
+      // 域名
+      const domain = config.domain;
+      const port = config.port;
+      // 文件访问路径
+      return `${domain}:${port}/${dirPath}/${n}`;
+    };
+    ctx.success(createURL(filename));
   } else {
     ctx.throw(400, { message: "请选择需要上传的文件" });
   }

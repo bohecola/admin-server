@@ -8,7 +8,6 @@ const parameter = require('koa-parameter');
 const path = require('path');
 const router = require('./router');
 const auth = require('./middleware/auth');
-const upload = require('./middleware/upload');
 const responseBody = require('./middleware/response');
 const pagination = require('./middleware/pagination');
 const bootstrap = require('./bootstrap');
@@ -67,8 +66,6 @@ app
   .use(auth())
   // 请求体解析
   .use(bodyParser())
-  // 文件上传
-  .use(upload(app))
   // 请求参数校验
   .use(parameter(app))
   // 挂载分页方法
