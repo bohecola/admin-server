@@ -35,6 +35,10 @@ exports.update = async (ctx) => {
   const article = await Article.findByPk(id);
 
   !article && ctx.throw(404, '文章不存在');
+  
+  if (ctx.request.body.categoryId === "") {
+    ctx.request.body.categoryId = null;
+  } 
 
   await Article.update(ctx.request.body, { where: { id: id } });
 
