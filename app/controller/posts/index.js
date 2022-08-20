@@ -165,7 +165,10 @@ exports.records = async (ctx) => {
       [sequelize.fn('date_format', sequelize.col('createdAt'), '%Y-%m-%d'), 'day'],
       'createdAt'
     ],
-    group: ['day', 'id'],
+    where: {
+      status: 1
+    },
+    group: ['day', 'id']
   });
   // JSON
   const raw = res.map(item => item.toJSON())
