@@ -168,6 +168,7 @@ exports.records = async (ctx) => {
     where: {
       status: 1
     },
+    order: [['createdAt', 'DESC']],
     group: ['day', 'id']
   });
   // JSON
