@@ -175,7 +175,10 @@ exports.records = async (ctx) => {
   // 分组
   const records = _.groupBy(raw, 'year');
   for(const key in records) {
-    records[key].forEach(post => delete post.year);
+    records[key].forEach(post => {
+      post.createdAt = post.createdAt.substring(0, 10)
+      delete post.year;
+    });
   }
   ctx.success(records);
 }
