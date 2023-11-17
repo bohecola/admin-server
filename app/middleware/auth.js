@@ -7,7 +7,7 @@ const auth = () => {
 
     const whiteList = ['/page', '/info', '/tags', '/categories', '/records', '/profile'].map(path => `/api/posts${path}`);
 
-    const openApis = ['/login', '/refreshToken', '/eps', '/captcha'].map(path => `/api/admin/open${path}`);
+    const openApis = ['/login', '/refreshToken', '/eps', '/captcha', '/qrcode', '/qrcodePoll'].map(path => `/api/admin/open${path}`);
 
     whiteList.push(...openApis);
 

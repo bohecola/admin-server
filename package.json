@@ -28,6 +28,7 @@
     "mini-svg-data-uri": "^1.4.4",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^2.3.3",
+    "qrcode": "^1.5.3",
     "sequelize": "^6.20.1",
     "svg-captcha": "^1.4.0",
     "uuid": "^8.3.2"

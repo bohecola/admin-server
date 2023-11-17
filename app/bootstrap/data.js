@@ -31,7 +31,7 @@ const initData = async () => {
   const users = await User.findAll();
   if (!users.length) {
     const initialUsers = await User.bulkCreate([
-      { username: 'bohecola', password: '123456', name: '薄荷可乐', nickName: '薄荷可乐', email: 'bohecola@outlook.com' },
+      { username: 'bohecola', password: '123456', name: '薄荷', nickName: '薄荷', email: 'bohecola@outlook.com', avatar: "https://avatars.githubusercontent.com/u/68556445?s=400&u=f6a48c29fc37c207888b8fad75eea286033dc320&v=4" },
       { username: 'xiaoqing', password: '123456', name: '小青', nickName: '小青' },
       { username: 'xiaolv', password: '123456', name: '小绿', nickName: '小绿' },
       { username: 'xiaohei', password: '123456', name: '小黑', nickName: '小黑' },
