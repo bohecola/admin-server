@@ -33,7 +33,7 @@ username: bohecola
 password: 123456
 ```
 
-> 提示：创建好名为`admin-server`的数据库后，启动时会自动导入数据库，无需手动导入
+> 提示：创建好名为 `admin-server` 的数据库后，启动时会自动导入数据库，无需手动导入
 
 ## 数据库配置
 
