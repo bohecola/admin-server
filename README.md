@@ -1,6 +1,6 @@
 # Koa2 管理系统服务端
 
-Koa2 + Mysql + Sequelize 搭建的博客后台管理系统
+Koa2 + MySQL + Sequelize 搭建的博客后台管理系统
 
 ## 环境要求
 
