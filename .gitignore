@@ -1,4 +1,8 @@
 node_modules
 logs
 
+.DS_Store
+
 **/public/upload
+app/tmp
+app/upload

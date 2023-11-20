@@ -61,7 +61,8 @@ app
   // 挂载返回统一格式数据方法
   .use(responseBody())
   // 静态资源访问
-  .use(mount('/public', static(path.join(__dirname, './public'))))
+  .use(mount('/public', static(path.join(__dirname, 'public'))))
+  .use(mount('/upload', static(path.join(__dirname, 'upload'))))
   // token认证
   .use(auth())
   // 请求体解析
