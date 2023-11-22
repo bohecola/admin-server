@@ -13,6 +13,8 @@ const initData = async () => {
     { name: '文档列表', type: 1, router: '/blog/document', icon: 'Tickets', viewPath: 'modules/blog/views/article.vue', keepAlive: 1, orderNum: 1, parentId: 5 },
     { name: '目录列表', type: 1, router: '/blog/category', icon: 'Coin', viewPath: 'modules/blog/views/category.vue', keepAlive: 1, orderNum: 2, parentId: 5 },
     { name: '标签列表', type: 1, router: '/blog/tag', icon: 'Connection', viewPath: 'modules/blog/views/tag.vue', keepAlive: 1, orderNum: 3, parentId: 5 },
+
+    { name: '文件上传', type: 1, router: '/upload/list', icon: 'Document', viewPath: 'modules/upload/views/list.vue', keepAlive: 1, orderNum: 3 },
   ]);
 
   // 初始化角色数据
@@ -23,7 +25,7 @@ const initData = async () => {
       { name: '开发', label: 'dev', userId: 1 }
     ]);
     await Promise.all(initialRoles.map(role => role.addMenus(
-      role.name === "系统管理员" ? [1, 2, 3, 4, 5, 6, 7, 8] : [1, 2, 3, 4]
+      role.name === "系统管理员" ? [1, 2, 3, 4, 5, 6, 7, 8, 9] : [1, 2, 3, 4, 9]
     )));
   }
 
