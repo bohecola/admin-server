@@ -8,8 +8,11 @@ const path = require('path');
 // 路由
 const router = new Router();
 
+// 存储目录
+const dest = path.resolve(__dirname, '../../', 'tmp');
+
 // multer
-const upload = multer({ dest: path.resolve(__dirname, '../../', 'tmp') }); 
+const upload = multer({ dest }); 
 
 router.
   prefix('/upload')
@@ -17,6 +20,7 @@ router.
     upload.single('chunk'),
     uploadController.uploadChunk
   )
-  .post('/merge', uploadController.mergeChunk);
+  .post('/merge', uploadController.mergeChunk)
+  .post('/verify', uploadController.verifyUpload);
 
 module.exports = router;

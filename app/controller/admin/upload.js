@@ -1,8 +1,12 @@
 const path = require('path');
 const fse = require('fs-extra');
+const { domain, port } = require('../../config');
 
 // 大文件存储目录
 const UPLOAD_DIR = path.resolve(__dirname, '../../', 'upload');
+
+// 切片目录路径
+const getChunkDir = (fileHash) => path.resolve(UPLOAD_DIR, `${fileHash}-chunks`);
 
 // 提取文件后缀名
 const extractExt = (filename) => filename.slice(filename.lastIndexOf('.'), filename.length);
@@ -10,18 +14,14 @@ const extractExt = (filename) => filename.slice(filename.lastIndexOf('.'), filen
 // 上传 chunk
 exports.uploadChunk = async (ctx) => {
 
-  const {
-    // 整个文件哈希
-    fileHash,
-    // 切片哈希（文件哈希-索引）
-    hash,
-  } = ctx.request.body;
+  // 文件哈希，切片哈希（文件哈希-索引）
+  const { fileHash, hash } = ctx.request.body;
 
   // 切片文件
   const chunk = ctx.request.file;
 
   // 切片目录路径
-  const chunkDir = path.resolve(UPLOAD_DIR, `${fileHash}-chunks`);
+  const chunkDir = getChunkDir(fileHash);
 
   // 切片目录不存在，创建切片目录
   await fse.ensureDir(chunkDir);
@@ -32,13 +32,48 @@ exports.uploadChunk = async (ctx) => {
   ctx.success("上传成功")
 }
 
+// 上传验证
+exports.verifyUpload = async (ctx) => {
+  // 请求体
+  const { fileHash, fileName } = ctx.request.body;
+
+  // 文件的后缀名 eg: .mp4
+  const ext = extractExt(fileName);
+
+  // 文件路径
+  const targetPath = path.resolve(UPLOAD_DIR, fileHash + ext);
+
+  // 判断文件是否存在
+  if (fse.existsSync(targetPath)) {
+    // 合成后的文件存在，不需要上传
+    ctx.success({ shouldUpload: false, url: `${domain}:${port}/upload/${fileHash}${ext}` })
+  } else {
+    // 切片目录路径
+    const chunkDir = getChunkDir(fileHash);
+    // 合成后的文件不存在
+    const uploadedList = 
+      // 切片目录存在
+      fse.existsSync(chunkDir)
+        // 读取切片目录下的所有文件
+        ? await fse.readdir(chunkDir)
+        // 切片目录不存在，返回空数组
+        : [];
+    
+    // 返回已经上传的切片列表
+    ctx.success({
+      shouldUpload: true,
+      uploadedList: uploadedList
+    })
+  }
+}
+
 // 合并 chunk
 exports.mergeChunk = async (ctx) => {
 
   const { fileHash, fileName, splitSize, total } = ctx.request.body;
 
   // 切片的文件夹
-  const chunkDir = path.resolve(UPLOAD_DIR, `${fileHash}-chunks`);
+  const chunkDir = getChunkDir(fileHash);
 
   // 切片路径列表
   const chunkPaths = await fse.readdir(chunkDir);
@@ -71,7 +106,8 @@ exports.mergeChunk = async (ctx) => {
   // 合并后删除保存切片的目录
   fse.rmdirSync(chunkDir); 
 
-  ctx.success("合并成功")
+  // 返回文件地址给前端
+  ctx.success({ url: `${domain}:${port}/upload/${fileHash}${ext}` })
 }
 
 // 读流 -> 写流
