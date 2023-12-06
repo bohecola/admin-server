@@ -13,8 +13,7 @@ const extractExt = (filename) => filename.slice(filename.lastIndexOf('.'), filen
 
 // 上传 chunk
 exports.uploadChunk = async (ctx) => {
-
-  // 文件哈希，切片哈希（文件哈希-索引）
+  // 文件哈希，切片哈希=${文件哈希}-${切片索引}
   const { fileHash, hash } = ctx.request.body;
 
   // 切片文件
@@ -26,18 +25,18 @@ exports.uploadChunk = async (ctx) => {
   // 切片目录不存在，创建切片目录
   await fse.ensureDir(chunkDir);
 
-  // 将切片文件移动到切片文件的目录中并重命名为 hash
+  // 将切片文件移动到切片文件的目录中并重命名为切片哈希（即fileHash-index）
   await fse.move(chunk.path, `${chunkDir}/${hash}`);
 
   ctx.success("上传成功")
 }
 
-// 上传验证
+// 上传前验证
 exports.verifyUpload = async (ctx) => {
-  // 请求体
+  // 请求体参数
   const { fileHash, fileName } = ctx.request.body;
 
-  // 文件的后缀名 eg: .mp4
+  // 读取文件的后缀名 eg: .mp4
   const ext = extractExt(fileName);
 
   // 文件路径
@@ -54,7 +53,7 @@ exports.verifyUpload = async (ctx) => {
     const uploadedList = 
       // 切片目录存在
       fse.existsSync(chunkDir)
-        // 读取切片目录下的所有文件
+        // 返回切片目录下已上传的切片文件列表
         ? await fse.readdir(chunkDir)
         // 切片目录不存在，返回空数组
         : [];
@@ -69,15 +68,16 @@ exports.verifyUpload = async (ctx) => {
 
 // 合并 chunk
 exports.mergeChunk = async (ctx) => {
-
+  // 请求体参数
   const { fileHash, fileName, splitSize, total } = ctx.request.body;
 
-  // 切片的文件夹
+  // 获取该文件的切片的文件夹路径
   const chunkDir = getChunkDir(fileHash);
 
-  // 切片路径列表
+  // 获取切片的文件列表
   const chunkPaths = await fse.readdir(chunkDir);
 
+  // 已存在的切片数量与切片的总数不符，不能直接合并
   if (chunkPaths.length !== total) {
     ctx.fail("切片文件数量不符合");
   }
@@ -85,12 +85,13 @@ exports.mergeChunk = async (ctx) => {
   // 根据切片下标进行排序，直接读取目录获得的顺序可能会错乱
   chunkPaths.sort((a, b) => a.split("-")[1] - b.split("-")[1]);
 
-  // 文件的后缀名 eg: .mp4
+  // 获取该文件的后缀名 eg: .mp4
   const ext = extractExt(fileName);
 
-  // 最终的文件路径
+  // 计算需要最终的存储的文件路径
   const targetPath = path.resolve(UPLOAD_DIR, fileHash + ext);
 
+  // 开始合并切片
   await Promise.all(
     chunkPaths.map((chunkPath, index) => {
       return pipeStream(
@@ -125,4 +126,3 @@ const pipeStream = (path, writeStream) =>
 
     readStream.pipe(writeStream);
   });
-
